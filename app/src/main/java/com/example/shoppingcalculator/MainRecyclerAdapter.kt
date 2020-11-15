@@ -10,7 +10,7 @@ class MainRecyclerAdapter(var values: ArrayList<Event>, var onClickListener: OnC
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainRecyclerViewHolder {
-        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.events_row_layout, parent, false)
+        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.main_row_layout, parent, false)
         return MainRecyclerViewHolder(itemView)
     }
 

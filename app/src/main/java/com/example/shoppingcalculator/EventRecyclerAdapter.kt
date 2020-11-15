@@ -10,7 +10,7 @@ class EventRecyclerAdapter(var values: ArrayList<Expense>, var onClickListener: 
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EventRecyclerViewHolder {
-        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.expences_row_layout, parent, false)
+        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.event_row_layout, parent, false)
         return EventRecyclerViewHolder(itemView)
     }
 

@@ -11,16 +11,16 @@
         android:id="@+id/btn_register"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="284dp"
         android:layout_marginEnd="20dp"
+        android:layout_marginBottom="60dp"
         android:background="@drawable/rounded_button"
         android:onClick="onRegisterClick"
         android:text="@string/btn_register"
         android:textColor="@android:color/white"
         android:textColorHint="@android:color/white"
         android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/et_password" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <EditText
         android:id="@+id/et_login"
@@ -65,17 +65,17 @@
         android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="284dp"
+        android:layout_marginBottom="60dp"
         android:background="@drawable/rounded_button"
         android:onClick="onLoginClick"
         android:text="@string/btn_signin"
         android:textColor="@android:color/white"
         android:textColorHint="@android:color/white"
         android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/btn_register"
         app:layout_constraintHorizontal_bias="0.054"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/et_password" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <ProgressBar
         android:id="@+id/progressBar"
