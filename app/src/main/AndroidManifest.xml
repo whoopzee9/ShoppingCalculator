@@ -13,12 +13,12 @@
             android:windowSoftInputMode="adjustResize|stateVisible">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity android:name=".MainActivity"
             android:windowSoftInputMode="adjustResize|stateVisible">
+            
         </activity>
         <activity android:name=".EventActivity"
             android:windowSoftInputMode="adjustResize|stateVisible">

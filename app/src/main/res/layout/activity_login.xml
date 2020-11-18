@@ -12,7 +12,7 @@
         android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="20dp"
-        android:layout_marginBottom="60dp"
+        android:layout_marginBottom="148dp"
         android:background="@drawable/rounded_button"
         android:onClick="onRegisterClick"
         android:text="@string/btn_register"
@@ -21,6 +21,21 @@
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
+
+    <Button
+        android:id="@+id/btn_login_via_vk"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="64dp"
+        android:background="@drawable/rounded_button"
+        android:onClick="onLoginViaVKClick"
+        android:text="@string/login_via_vk"
+        android:textColor="@android:color/white"
+        android:textColorHint="@android:color/white"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <EditText
         android:id="@+id/et_login"
@@ -65,7 +80,7 @@
         android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
-        android:layout_marginBottom="60dp"
+        android:layout_marginBottom="148dp"
         android:background="@drawable/rounded_button"
         android:onClick="onLoginClick"
         android:text="@string/btn_signin"
@@ -74,7 +89,7 @@
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/btn_register"
-        app:layout_constraintHorizontal_bias="0.054"
+        app:layout_constraintHorizontal_bias="0.16"
         app:layout_constraintStart_toStartOf="parent" />
 
     <ProgressBar
