@@ -56,10 +56,10 @@ class ExpensesActivity: AppCompatActivity() {
         etName.setText(name.text)
 
         val dialog = AlertDialog.Builder(this)
-            .setTitle("Edit expense")
+            .setTitle("Изменить расход")
             .setView(placeFormView)
-            .setNegativeButton("Cancel", null)
-            .setPositiveButton("Apply", null)
+            .setNegativeButton("Отмена", null)
+            .setPositiveButton("Изменить", null)
             .show()
 
         dialog.getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener {

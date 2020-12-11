@@ -48,10 +48,10 @@ class EventActivity: AppCompatActivity() {
         val placeFormView = LayoutInflater.from(this).inflate(R.layout.expense_dialog_layout, null)
 
         val dialog = AlertDialog.Builder(this)
-            .setTitle("Add new expense")
+            .setTitle("Добавление нового рассхода")
             .setView(placeFormView)
-            .setNegativeButton("Cancel", null)
-            .setPositiveButton("Apply", null)
+            .setNegativeButton("Отмена", null)
+            .setPositiveButton("Добавить", null)
             .show()
 
         dialog.getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener {

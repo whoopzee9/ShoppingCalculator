@@ -7,26 +7,12 @@
     tools:context=".LoginActivity"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <Button
-        android:id="@+id/btn_register"
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="20dp"
-        android:layout_marginBottom="148dp"
-        android:background="@drawable/rounded_button"
-        android:onClick="onRegisterClick"
-        android:text="@string/btn_register"
-        android:textColor="@android:color/white"
-        android:textColorHint="@android:color/white"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
 
     <Button
         android:id="@+id/btn_login_via_vk"
-        android:layout_width="315dp"
-        android:layout_height="45dp"
-        android:layout_marginBottom="64dp"
+        android:layout_width="350dp"
+        android:layout_height="56dp"
+        android:layout_marginBottom="76dp"
         android:background="@drawable/rounded_button_vk"
         android:drawableLeft="@drawable/vk_white"
         android:fontFamily="sans-serif-medium"
@@ -38,6 +24,39 @@
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.54"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/btn_register"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="172dp"
+        android:background="@drawable/rounded_button"
+        android:onClick="onRegisterClick"
+        android:text="@string/btn_register"
+        android:textColor="@android:color/white"
+        android:textColorHint="@android:color/white"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <Button
+        android:id="@+id/btn_login"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginBottom="172dp"
+        android:background="@drawable/rounded_button"
+        android:onClick="onLoginClick"
+        android:text="@string/btn_signin"
+        android:textColor="@android:color/white"
+        android:textColorHint="@android:color/white"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/btn_register"
+        app:layout_constraintHorizontal_bias="0.194"
         app:layout_constraintStart_toStartOf="parent" />
 
     <EditText
@@ -45,12 +64,13 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="64dp"
-        android:layout_marginTop="108dp"
+        android:layout_marginTop="312dp"
         android:layout_marginEnd="64dp"
         android:backgroundTint="@color/colorPrimaryDark"
         android:ems="10"
         android:fontFamily="sans-serif"
         android:hint="@string/text_login"
+        android:textAlignment="center"
         android:textColor="@color/colorPrimaryDark"
         android:textColorHint="@color/colorPrimaryDark"
         android:textSize="24sp"
@@ -68,6 +88,7 @@
         android:layout_marginEnd="64dp"
         android:backgroundTint="@color/colorPrimaryDark"
         android:ems="10"
+        android:textAlignment="center"
         android:hint="@string/text_password"
         android:inputType="textPassword"
         android:textColor="@color/colorPrimaryDark"
@@ -77,23 +98,6 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/et_login" />
-
-    <Button
-        android:id="@+id/btn_login"
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginBottom="148dp"
-        android:background="@drawable/rounded_button"
-        android:onClick="onLoginClick"
-        android:text="@string/btn_signin"
-        android:textColor="@android:color/white"
-        android:textColorHint="@android:color/white"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/btn_register"
-        app:layout_constraintHorizontal_bias="0.16"
-        app:layout_constraintStart_toStartOf="parent" />
 
     <ProgressBar
         android:id="@+id/progressBar"
@@ -110,6 +114,13 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.499" />
+
+    <ImageView
+        android:layout_width="254dp"
+        android:layout_height="196dp"
+        android:src="@drawable/logo"
+        tools:layout_editor_absoluteX="78dp"
+        tools:layout_editor_absoluteY="64dp" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

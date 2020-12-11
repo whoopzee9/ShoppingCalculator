@@ -24,12 +24,13 @@ class LoginActivity: AppCompatActivity() {
         etLogin = findViewById(R.id.et_login)
         etPassword = findViewById(R.id.et_password)
 
-        /*var fing = VKUtils.getCertificateFingerprint(this, this.packageName)
+
+        var fing = VKUtils.getCertificateFingerprint(this, this.packageName)
         if (fing != null) {
             for (item in fing) {
                 println(item)
             }
-        }*/
+        }
         if (VK.isLoggedIn()) {
             println(VK.getUserId())
             val intent = Intent(applicationContext, MainActivity::class.java)
