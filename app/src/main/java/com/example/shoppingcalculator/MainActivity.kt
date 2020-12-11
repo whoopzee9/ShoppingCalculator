@@ -14,9 +14,9 @@ import androidx.recyclerview.widget.RecyclerView
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
+import com.example.shoppingcalculator.firebaseDB.FirebaseDB
 
 class MainActivity : AppCompatActivity() {
-
     private lateinit var rvEvents: RecyclerView
     var values = ArrayList<Event>()
 
@@ -33,7 +33,7 @@ class MainActivity : AppCompatActivity() {
         val currentDate = sdf.format(Date())
         values.add(Event("title1", list, currentDate))
 
-        val adapter = MainRecyclerAdapter(values, object: MainRecyclerAdapter.OnClickListener {
+        val adapter = MainRecyclerAdapter(values, object : MainRecyclerAdapter.OnClickListener {
             override fun onItemClick(position: Int) {
                 val intent = Intent(applicationContext, EventActivity::class.java)
 
@@ -62,9 +62,18 @@ class MainActivity : AppCompatActivity() {
             val name = placeFormView.findViewById<EditText>(R.id.et_EventKey).text
             if (name.isBlank()) {
                 placeFormView.findViewById<EditText>(R.id.et_EventKey).hint = "Введите название"
+            } else {
+                //val db = FirebaseDB()
+                var key: String = ""
+                var i = 0
+                while (i < 8) {
+                    var number = (0..9).random()
+                    key = "$key$number"
+                    i += 1
+                }
+                //db.createEvent(name.toString(), key)
+                dialog.dismiss()
             }
-
-            dialog.dismiss()
         }
     }
 
@@ -79,9 +88,15 @@ class MainActivity : AppCompatActivity() {
             .show()
 
         dialog.getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener {
-            //TODO присоединение к событию
-            dialog.dismiss()
+            val key = placeFormView.findViewById<EditText>(R.id.et_EventKey).text
+            if (key.isBlank()) {
+                placeFormView.findViewById<EditText>(R.id.et_EventKey).hint = "Введите ключ"
+            } else {
+                //val db = FirebaseDB()
+                //db.joinEvent(key.toString())
+                dialog.dismiss()
+            }
         }
-    }
 
+    }
 }
