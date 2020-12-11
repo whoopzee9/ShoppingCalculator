@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">ShoppingCalculator</string>
+    <string name="text_login">Login</string>
+    <string name="text_password">Password</string>
+    <string name="btn_signin">Sign In</string>
+    <string name="btn_register">register</string>
+    <string name="login_via_vk">Войти через Вконтакте</string>
+    <integer name="com_vk_sdk_AppId">7668042</integer>
+</resources>
