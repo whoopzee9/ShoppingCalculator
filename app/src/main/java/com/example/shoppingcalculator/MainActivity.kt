@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
+import androidx.core.view.get
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import java.text.SimpleDateFormat
@@ -58,7 +59,11 @@ class MainActivity : AppCompatActivity() {
             .show()
 
         dialog.getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener {
-            //TODO добавление нового события
+            val name = placeFormView.findViewById<EditText>(R.id.et_EventKey).text
+            if (name.isBlank()) {
+                placeFormView.findViewById<EditText>(R.id.et_EventKey).hint = "Введите название"
+            }
+
             dialog.dismiss()
         }
     }
