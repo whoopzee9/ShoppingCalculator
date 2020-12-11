@@ -40,7 +40,7 @@ class EventActivityViewModel : ViewModel() {
     }
 
     //test
-    fun listenChange(it: User?) {
+    /*fun listenChange(it: User?) {
         updateGroup()
-    }
+    }*/
 }
