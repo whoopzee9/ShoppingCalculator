@@ -1,4 +1,4 @@
-package com.example.shoppingcalculator
+ package com.example.shoppingcalculator
 
 import android.content.DialogInterface
 import android.content.Intent
@@ -8,8 +8,10 @@ import android.view.View
 import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.text.isDigitsOnly
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.shoppingcalculator.firebaseDB.FirebaseDB
 
 class EventActivity: AppCompatActivity() {
 
@@ -55,8 +57,28 @@ class EventActivity: AppCompatActivity() {
             .show()
 
         dialog.getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener {
-            //TODO добавление нового продукта
-            dialog.dismiss()
+            var name = placeFormView.findViewById<EditText>(R.id.et_expense_name).text
+            var cost = placeFormView.findViewById<EditText>(R.id.et_expense_cost).text
+            if ((name.isBlank()) || (cost.isBlank())) {
+                if (name.isBlank()) {
+                    placeFormView.findViewById<EditText>(R.id.et_expense_name).hint = "Введите имя"
+                }
+                if (cost.isBlank()) {
+                    placeFormView.findViewById<EditText>(R.id.et_expense_cost).hint =
+                        "Введите стоимость"
+                }
+            } else {
+                val maybeDouble = cost.toString().toDoubleOrNull()
+                placeFormView.findViewById<EditText>(R.id.et_expense_cost).setText("")
+                if (maybeDouble == null) {
+                    placeFormView.findViewById<EditText>(R.id.et_expense_cost).hint =
+                        "Введите число"
+                } else {
+                    //val db = FirebaseDB()
+                    //db.createExpense(name.toString(), maybeDouble)
+                    dialog.dismiss()
+                }
+            }
         }
     }
 }

@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "1006701754024",
+    "firebase_url": "https://payshare-5c0e5.firebaseio.com",
+    "project_id": "payshare-5c0e5",
+    "storage_bucket": "payshare-5c0e5.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1006701754024:android:038cea9479264538e1349d",
+        "android_client_info": {
+          "package_name": "com.example.shoppingcalculator"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1006701754024-9d6d7n7s3bf9hp2gpegdsernug0fu6fh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAQWhKQmH6JbiX_lqVPmkaziceYP4jJ7U4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1006701754024-9d6d7n7s3bf9hp2gpegdsernug0fu6fh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
