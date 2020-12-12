@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.FirebaseApp
 import com.vk.api.sdk.VK
 import com.vk.api.sdk.VKApiConfig
 import com.vk.api.sdk.auth.VKAccessToken
@@ -23,7 +24,6 @@ class LoginActivity: AppCompatActivity() {
 
         etLogin = findViewById(R.id.et_login)
         etPassword = findViewById(R.id.et_password)
-
 
         var fing = VKUtils.getCertificateFingerprint(this, this.packageName)
         if (fing != null) {

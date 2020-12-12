@@ -12,10 +12,15 @@ import androidx.core.text.isDigitsOnly
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.shoppingcalculator.firebaseDB.FirebaseDB
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
 
-class EventActivity: AppCompatActivity() {
+ class EventActivity: AppCompatActivity() {
 
     private lateinit var rvExpenses: RecyclerView
+     private var firebaseDB = FirebaseDB()
+     private lateinit var currEvent: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,8 +28,10 @@ class EventActivity: AppCompatActivity() {
 
         rvExpenses = findViewById(R.id.rv_expenses)
 
+        currEvent = intent.getStringExtra("currEvent")
+
         var values = ArrayList<Expense>()
-        values.add(Expense("product", "description", false))
+        values.add(Expense("product", "description", false, "123", Date(System.currentTimeMillis()),123.0, ArrayList()))
 
         val adapter = EventRecyclerAdapter(values, object: EventRecyclerAdapter.OnClickListener {
             override fun onItemClick(position: Int) {
@@ -74,8 +81,7 @@ class EventActivity: AppCompatActivity() {
                     placeFormView.findViewById<EditText>(R.id.et_expense_cost).hint =
                         "Введите число"
                 } else {
-                    //val db = FirebaseDB()
-                    //db.createExpense(name.toString(), maybeDouble)
+                    firebaseDB.createExpense(name.toString(), currEvent, maybeDouble)
                     dialog.dismiss()
                 }
             }

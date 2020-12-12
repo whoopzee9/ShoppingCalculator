@@ -19,7 +19,7 @@ class EventRecyclerAdapter(var values: ArrayList<Expense>, var onClickListener: 
     }
 
     override fun onBindViewHolder(holder: EventRecyclerViewHolder, position: Int) {
-        holder.title.text = values[position].title
+        holder.title.text = values[position].name
 
         holder.itemView.setOnClickListener {
             onClickListener.onItemClick(position)

@@ -11,12 +11,15 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.shoppingcalculator.firebaseDB.FirebaseDB
+import com.google.firebase.FirebaseApp
 
 class ExpensesActivity: AppCompatActivity() {
 
     lateinit var name: TextView
     lateinit var cost: TextView
     lateinit var rvUsers: RecyclerView
+    lateinit var firebaseDB: FirebaseDB
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,6 +28,9 @@ class ExpensesActivity: AppCompatActivity() {
         name = findViewById(R.id.tv_expense_name)
         cost = findViewById(R.id.tv_expense_cost)
         rvUsers = findViewById(R.id.rv_sharing_users)
+
+        FirebaseApp.initializeApp(applicationContext)
+        firebaseDB = FirebaseDB()
 
         var values = ArrayList<SharingUser>()
         values.add(SharingUser("Alex", false))
@@ -40,6 +46,7 @@ class ExpensesActivity: AppCompatActivity() {
         })
         rvUsers.adapter = adapter
         rvUsers.layoutManager = LinearLayoutManager(this)
+
     }
 
     fun onAddSharingClick(view: View) {

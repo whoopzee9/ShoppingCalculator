@@ -26,17 +26,17 @@ class MainActivity : AppCompatActivity() {
 
         rvEvents = findViewById(R.id.rv_events)
 
-        var list = ArrayList<String>()
-        list.add("user1")
-        list.add("user2")
+        var list = ArrayList<User>()
+        list.add(User(ArrayList(), "user1"))
+        list.add(User(ArrayList(), "user2"))
         val sdf = SimpleDateFormat("dd/M/yyyy hh:mm:ss")
         val currentDate = sdf.format(Date())
-        values.add(Event("title1", list, currentDate))
+        values.add(Event("title1", ArrayList(), list))
 
         val adapter = MainRecyclerAdapter(values, object : MainRecyclerAdapter.OnClickListener {
             override fun onItemClick(position: Int) {
                 val intent = Intent(applicationContext, EventActivity::class.java)
-
+                intent.putExtra("currEvent", values[position].name)
                 //intent.putExtra("token", result)
                 //intent.putExtra("username", etLogin!!.text.toString().trim())
                 startActivity(intent)

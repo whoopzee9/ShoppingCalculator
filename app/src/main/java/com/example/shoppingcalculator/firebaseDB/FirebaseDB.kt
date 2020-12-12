@@ -3,9 +3,15 @@ package com.example.shoppingcalculator.firebaseDB
 import com.example.shoppingcalculator.Event
 import com.example.shoppingcalculator.Expense
 import com.example.shoppingcalculator.PaymentUser
+import com.example.shoppingcalculator.User
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.vk.api.sdk.VK
+import com.vk.api.sdk.VKApiManager
+import com.vk.api.sdk.requests.VKRequest
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
@@ -39,8 +45,10 @@ class FirebaseDB : ExtensionsCRUD {
         TODO("Not yet implemented")
     }
 
-    override fun createExpense(expenseName: String, price: Double) {
-        TODO("Not yet implemented")
+    override fun createExpense(eventName: String, expenseName: String, price: Double) {
+        val users = ArrayList<User>()
+        //users.add(User(, ))
+        //eventsRef.child(eventName).child("expences").setValue(Expense(expenseName, "desc", false, VK.getUserId().toString(), Date(System.currentTimeMillis()), price, ))
     }
 
     override fun joinExpense(expenseName: String) {
@@ -52,10 +60,29 @@ class FirebaseDB : ExtensionsCRUD {
     }
 
     override fun createUser() {
-        TODO("Not yet implemented")
+        //TODO отправлять запрос на сервера ВК чтобы получить имя текущего пользователя
+        println("created")
+        val user = User(ArrayList(), "Бубляев Алексей")
+        usersRef.child(VK.getUserId().toString()).setValue(user)
     }
 
-    override fun getUsers(callBack: (MutableList<PaymentUser?>) -> Unit) {
+    override fun getUser(userId: String, callBack: (User?) -> Unit) {
+        var user :User
+        usersRef.child(userId).addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if (snapshot.exists()) {
+                    //user = snapshot.children.
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+        })
+
+    }
+
+    override fun getUsers(callBack: (MutableList<User?>) -> Unit) {
         TODO("Not yet implemented")
     }
 
