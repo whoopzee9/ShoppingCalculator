@@ -31,7 +31,7 @@ import kotlin.collections.ArrayList
         currEvent = intent.getStringExtra("currEvent")
 
         var values = ArrayList<Expense>()
-        values.add(Expense("product", "description", false, "123", Date(System.currentTimeMillis()),123.0, ArrayList()))
+        values.add(Expense("product", "description", false, 123, Date(System.currentTimeMillis()).toString(),123.0, ArrayList()))
 
         val adapter = EventRecyclerAdapter(values, object: EventRecyclerAdapter.OnClickListener {
             override fun onItemClick(position: Int) {
@@ -81,7 +81,7 @@ import kotlin.collections.ArrayList
                     placeFormView.findViewById<EditText>(R.id.et_expense_cost).hint =
                         "Введите число"
                 } else {
-                    firebaseDB.createExpense(name.toString(), currEvent, maybeDouble)
+                    firebaseDB.createExpense(currEvent, name.toString(), maybeDouble)
                     dialog.dismiss()
                 }
             }

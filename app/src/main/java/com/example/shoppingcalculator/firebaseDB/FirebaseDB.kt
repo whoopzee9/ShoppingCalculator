@@ -9,6 +9,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.ktx.getValue
 import com.vk.api.sdk.VK
 import com.vk.api.sdk.VKApiManager
 import com.vk.api.sdk.requests.VKRequest
@@ -38,7 +39,10 @@ class FirebaseDB : ExtensionsCRUD {
     }
 
     override fun joinEvent(eventName: String) {
-        TODO("Not yet implemented")
+        if (eventName.isNotEmpty()) {
+            eventsRef.child(eventName).child("users").child(VK.getUserId().toString()).setValue(VK.getUserId().toString())
+            usersRef.child(VK.getUserId().toString()).child("events").child(eventName).setValue(eventName)
+        }
     }
 
     override fun getEvents(callBack: (MutableList<String?>) -> Unit) {
@@ -46,9 +50,10 @@ class FirebaseDB : ExtensionsCRUD {
     }
 
     override fun createExpense(eventName: String, expenseName: String, price: Double) {
-        getUser(VK.getUserId().toString()) {
-            eventsRef.child(eventName).child("expences").setValue(Expense(expenseName, "desc", false, VK.getUserId().toString(), Date(System.currentTimeMillis()), price, it))
-        }
+        val users = ArrayList<Int>()
+        users.add(VK.getUserId())
+        eventsRef.child(eventName).child("expences").child("expenseID").setValue(Expense(expenseName, "desc", false, VK.getUserId(), Date(System.currentTimeMillis()).toString(), price, users))
+
     }
 
     override fun joinExpense(expenseName: String) {
@@ -61,21 +66,23 @@ class FirebaseDB : ExtensionsCRUD {
 
     override fun createUser() {
         //TODO отправлять запрос на сервера ВК чтобы получить имя текущего пользователя
-        println("created")
         val user = User(ArrayList(), "Бубляев Алексей")
         usersRef.child(VK.getUserId().toString()).setValue(user)
     }
 
     override fun getUser(userId: String, callBack: (MutableList<User>) -> Unit) {
-        var user: MutableList<User> = mutableListOf()
+        /*var user: MutableList<User> = mutableListOf()
         usersRef.child(userId).addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 if (snapshot.exists()) {
+                    println(snapshot.getValue(User::class.java))
+
                     for (item in snapshot.children) {
-                        val retrieveUser = item.getValue(User::class.java)
+                        println(item.value)
+                        /*val retrieveUser = item.getValue(User::class.java)
                         if (retrieveUser != null) {
                             user.add(retrieveUser)
-                        }
+                        }*/
                     }
                     callBack(user)
                 }
@@ -84,7 +91,7 @@ class FirebaseDB : ExtensionsCRUD {
             override fun onCancelled(error: DatabaseError) {
                 TODO("Not yet implemented")
             }
-        })
+        })*/
 
     }
 

@@ -26,6 +26,7 @@ class MainActivity : AppCompatActivity() {
 
         rvEvents = findViewById(R.id.rv_events)
 
+
         var list = ArrayList<User>()
         list.add(User(ArrayList(), "user1"))
         list.add(User(ArrayList(), "user2"))
@@ -46,6 +47,8 @@ class MainActivity : AppCompatActivity() {
         rvEvents.adapter = adapter
         rvEvents.layoutManager = LinearLayoutManager(this)
 
+        var firebaseDB = FirebaseDB()
+        firebaseDB.joinEvent("event1")
     }
 
     fun onAddEventClick(view: View) {
