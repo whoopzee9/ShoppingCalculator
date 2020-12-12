@@ -15,10 +15,14 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 import com.example.shoppingcalculator.firebaseDB.FirebaseDB
+import com.vk.api.sdk.VK
+import kotlin.collections.HashMap
 
 class MainActivity : AppCompatActivity() {
     private lateinit var rvEvents: RecyclerView
     var values = ArrayList<Event>()
+    var firebaseDB = FirebaseDB()
+    lateinit var adapter: MainRecyclerAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,14 +31,16 @@ class MainActivity : AppCompatActivity() {
         rvEvents = findViewById(R.id.rv_events)
 
 
-        var list = ArrayList<User>()
-        list.add(User(ArrayList(), "user1"))
-        list.add(User(ArrayList(), "user2"))
+        var list = ArrayList<Int>()
+        //list.add(User(ArrayList(), "user1"))
+        //list.add(User(ArrayList(), "user2"))
         val sdf = SimpleDateFormat("dd/M/yyyy hh:mm:ss")
         val currentDate = sdf.format(Date())
-        values.add(Event("title1", ArrayList(), list))
+        println(Date(System.currentTimeMillis()).toString())
 
-        val adapter = MainRecyclerAdapter(values, object : MainRecyclerAdapter.OnClickListener {
+        //values.add(Event("title1","1", ArrayList(), HashMap()))
+
+        adapter = MainRecyclerAdapter(values, object : MainRecyclerAdapter.OnClickListener {
             override fun onItemClick(position: Int) {
                 val intent = Intent(applicationContext, EventActivity::class.java)
                 intent.putExtra("currEvent", values[position].name)
@@ -47,8 +53,15 @@ class MainActivity : AppCompatActivity() {
         rvEvents.adapter = adapter
         rvEvents.layoutManager = LinearLayoutManager(this)
 
-        var firebaseDB = FirebaseDB()
-        firebaseDB.joinEvent("event1")
+        firebaseDB.getEvents {
+            for (item in it) {
+                if (item.users.containsValue(VK.getUserId().toString())) {
+                    values.add(item)
+                }
+            }
+            adapter.notifyDataSetChanged()
+        }
+
     }
 
     fun onAddEventClick(view: View) {
@@ -66,7 +79,6 @@ class MainActivity : AppCompatActivity() {
             if (name.isBlank()) {
                 placeFormView.findViewById<EditText>(R.id.et_EventKey).hint = "Введите название"
             } else {
-                //val db = FirebaseDB()
                 var key: String = ""
                 var i = 0
                 while (i < 8) {
@@ -74,7 +86,7 @@ class MainActivity : AppCompatActivity() {
                     key = "$key$number"
                     i += 1
                 }
-                //db.createEvent(name.toString(), key)
+                firebaseDB.createEvent(name.toString(), key)
                 dialog.dismiss()
             }
         }
@@ -95,9 +107,16 @@ class MainActivity : AppCompatActivity() {
             if (key.isBlank()) {
                 placeFormView.findViewById<EditText>(R.id.et_EventKey).hint = "Введите ключ"
             } else {
-                //val db = FirebaseDB()
-                //db.joinEvent(key.toString())
+                firebaseDB.joinEvent(key.toString())
                 dialog.dismiss()
+                firebaseDB.getEvents {
+                    for (item in it) {
+                        if (item.users.containsValue(VK.getUserId().toString())) {
+                            values.add(item)
+                        }
+                    }
+                    adapter.notifyDataSetChanged()
+                }
             }
         }
 

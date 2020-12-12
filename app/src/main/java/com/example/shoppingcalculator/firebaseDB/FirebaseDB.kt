@@ -35,18 +35,49 @@ class FirebaseDB : ExtensionsCRUD {
     }
 
     override fun createEvent(eventName: String, secretCode: String) {
-        TODO("Not yet implemented")
-    }
-
-    override fun joinEvent(eventName: String) {
         if (eventName.isNotEmpty()) {
-            eventsRef.child(eventName).child("users").child(VK.getUserId().toString()).setValue(VK.getUserId().toString())
+            val users = HashMap<String, String>()
+            users.put(VK.getUserId().toString(), VK.getUserId().toString())
+            val expenses = ArrayList<Expense>()
+            eventsRef.child(eventName).setValue(Event(eventName, secretCode, expenses, users))
             usersRef.child(VK.getUserId().toString()).child("events").child(eventName).setValue(eventName)
         }
     }
 
-    override fun getEvents(callBack: (MutableList<String?>) -> Unit) {
-        TODO("Not yet implemented")
+    override fun joinEvent(code: String) {
+        getEvents {
+            if (code.isNotEmpty()) {
+                for (item in it) {
+                    if (item.code.equals(code)) {
+                        eventsRef.child(item.name).child("users").child(VK.getUserId().toString()).setValue(VK.getUserId().toString())
+                        usersRef.child(VK.getUserId().toString()).child("events").child(item.name).setValue(item.name)
+                    }
+                }
+            }
+        }
+    }
+
+    override fun getEvents(callBack: (MutableList<Event>) -> Unit) {
+        var events: MutableList<Event> = mutableListOf()
+        eventsRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if (snapshot.exists()) {
+                    //println(snapshot.getValue(User::class.java))
+                    for (item in snapshot.children) {
+                        println(item.value)
+                        val retrieveEvent = item.getValue(Event::class.java)
+                        if (retrieveEvent != null) {
+                            events.add(retrieveEvent)
+                        }
+                    }
+                    callBack(events)
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+        })
     }
 
     override fun createExpense(eventName: String, expenseName: String, price: Double) {

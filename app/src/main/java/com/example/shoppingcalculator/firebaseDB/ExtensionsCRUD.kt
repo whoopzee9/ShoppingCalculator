@@ -8,8 +8,8 @@ import com.example.shoppingcalculator.User
 interface ExtensionsCRUD {
 
     fun createEvent(eventName: String, secretCode: String)
-    fun joinEvent(eventName: String)
-    fun getEvents(callBack: (MutableList<String?>) -> Unit)
+    fun joinEvent(code: String)
+    fun getEvents(callBack: (MutableList<Event>) -> Unit)
 
     fun createExpense(eventName: String, expenseName: String, price: Double)
     fun joinExpense(expenseName: String)
