@@ -11,11 +11,15 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.view.get
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.shoppingcalculator.VKAPI.VKUser
+import com.example.shoppingcalculator.VKAPI.VKUsersRequest
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 import com.example.shoppingcalculator.firebaseDB.FirebaseDB
 import com.vk.api.sdk.VK
+import com.vk.api.sdk.VKApiCallback
+import com.vk.api.sdk.exceptions.VKApiExecutionException
 import kotlin.collections.HashMap
 
 class MainActivity : AppCompatActivity() {
@@ -30,6 +34,9 @@ class MainActivity : AppCompatActivity() {
 
         rvEvents = findViewById(R.id.rv_events)
 
+        Locale.setDefault(Locale("ru"))
+        val config = applicationContext.resources.configuration
+        config.setLocale(Locale("ru"))
 
         var list = ArrayList<Int>()
         //list.add(User(ArrayList(), "user1"))
@@ -39,6 +46,17 @@ class MainActivity : AppCompatActivity() {
         println(Date(System.currentTimeMillis()).toString())
 
         //values.add(Event("title1","1", ArrayList(), HashMap()))
+
+        val array = intArrayOf(210700286, 218321196)
+
+        VK.execute(VKUsersRequest(array), object: VKApiCallback<List<VKUser>> {
+            override fun success(result: List<VKUser>) {
+                println(result)
+            }
+            override fun fail(error: Exception) {
+            }
+        })
+
 
         adapter = MainRecyclerAdapter(values, object : MainRecyclerAdapter.OnClickListener {
             override fun onItemClick(position: Int) {

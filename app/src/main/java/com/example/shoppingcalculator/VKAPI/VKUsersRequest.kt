@@ -11,7 +11,8 @@ class VKUsersRequest: VKRequest<List<VKUser>> {
         if (uids.isNotEmpty()) {
             addParam("user_ids", uids.joinToString(","))
         }
-        addParam("fields", "photo_200")
+        //addParam("fields", "photo_200")
+        addParam("lang", 0)
     }
 
     override fun parse(r: JSONObject): List<VKUser> {
