@@ -6,5 +6,5 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 @Parcelize
-class Expense(var name: String, var description: String, var isBought: Boolean, var buyer: String, var date: Date, var price: Double, var users: ArrayList<User>): Parcelable {
+class Expense(var name: String, var description: String, var isBought: Boolean, var buyer: String, var date: Date, var price: Double, var users: MutableList<User>): Parcelable {
 }

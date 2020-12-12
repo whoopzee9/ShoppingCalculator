@@ -19,19 +19,19 @@ class MainRecyclerAdapter(var values: ArrayList<Event>, var onClickListener: OnC
     }
 
     override fun onBindViewHolder(holder: MainRecyclerViewHolder, position: Int) {
-        holder.title.text = values[position].title
+        holder.title.text = values[position].name
 
         holder.itemView.setOnClickListener {
             onClickListener.onItemClick(position)
         }
 
         var users: String = ""
-        for (user in values[position].Users) {
+        for (user in values[position].users) {
             users += "$user, "
         }
         users = users.dropLast(2)
         holder.users.text = users
-        holder.date.text = values[position].date
+        //holder.date.text = values[position].date
     }
 
 }

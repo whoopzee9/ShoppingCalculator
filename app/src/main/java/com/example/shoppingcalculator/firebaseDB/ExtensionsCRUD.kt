@@ -17,7 +17,7 @@ interface ExtensionsCRUD {
 
     fun createUser()
     fun getUsers(callBack: (MutableList<User?>) -> Unit) //TODO Возможно поменять класс??
-    fun getUser(userId: String, callBack: (User?) -> Unit)
+    fun getUser(userId: String, callBack: (MutableList<User>) -> Unit)
 
     fun listenEventChange(users: ArrayList<String?>, callBack: ((Event?) -> Unit))
     fun detachListEvents(listEvents: ArrayList<Event?>)

@@ -46,9 +46,9 @@ class FirebaseDB : ExtensionsCRUD {
     }
 
     override fun createExpense(eventName: String, expenseName: String, price: Double) {
-        val users = ArrayList<User>()
-        //users.add(User(, ))
-        //eventsRef.child(eventName).child("expences").setValue(Expense(expenseName, "desc", false, VK.getUserId().toString(), Date(System.currentTimeMillis()), price, ))
+        getUser(VK.getUserId().toString()) {
+            eventsRef.child(eventName).child("expences").setValue(Expense(expenseName, "desc", false, VK.getUserId().toString(), Date(System.currentTimeMillis()), price, it))
+        }
     }
 
     override fun joinExpense(expenseName: String) {
@@ -66,12 +66,18 @@ class FirebaseDB : ExtensionsCRUD {
         usersRef.child(VK.getUserId().toString()).setValue(user)
     }
 
-    override fun getUser(userId: String, callBack: (User?) -> Unit) {
-        var user :User
+    override fun getUser(userId: String, callBack: (MutableList<User>) -> Unit) {
+        var user: MutableList<User> = mutableListOf()
         usersRef.child(userId).addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 if (snapshot.exists()) {
-                    //user = snapshot.children.
+                    for (item in snapshot.children) {
+                        val retrieveUser = item.getValue(User::class.java)
+                        if (retrieveUser != null) {
+                            user.add(retrieveUser)
+                        }
+                    }
+                    callBack(user)
                 }
             }
 
