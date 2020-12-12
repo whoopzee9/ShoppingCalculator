@@ -81,19 +81,68 @@ class FirebaseDB : ExtensionsCRUD {
     }
 
     override fun createExpense(eventName: String, expenseName: String, price: Double) {
-        val users = ArrayList<Int>()
-        users.add(VK.getUserId())
+        val users = HashMap<String, String>()
+        users.put(VK.getUserId().toString(), VK.getUserId().toString())
         eventsRef.child(eventName).child("expences").child("expenseID").setValue(Expense(expenseName, "desc", false, VK.getUserId(), Date(System.currentTimeMillis()).toString(), price, users))
 
     }
 
-    override fun joinExpense(expenseName: String) {
-        TODO("Not yet implemented")
+    override fun joinExpense(eventName: String, expenseName: String) {
+        if (eventName.isNotEmpty() && expenseName.isNotEmpty()) {
+            eventsRef.child(eventName).child("expences").child(expenseName).child("users").child(VK.getUserId().toString()).setValue(VK.getUserId().toString())
+        }
     }
 
-    override fun getExpenses(callBack: (MutableList<String?>) -> Unit) {
-        TODO("Not yet implemented")
+    override fun getExpenses(eventName:String, callBack: (MutableList<Expense>) -> Unit) {
+        var expenses: MutableList<Expense> = mutableListOf()
+        eventsRef.child(eventName).child("expences").addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if (snapshot.exists()) {
+                    //println(snapshot.getValue(User::class.java))
+                    for (item in snapshot.children) {
+                        println(item.value)
+                        val retrieveExpense = item.getValue(Expense::class.java)
+                        if (retrieveExpense != null) {
+                            expenses.add(retrieveExpense)
+                        }
+                    }
+                    callBack(expenses)
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+        })
     }
+
+    override fun getSharingUsers(
+        eventName: String,
+        expenseName: String,
+        callBack: (MutableList<String>) -> Unit
+    ) {
+        var users: MutableList<String> = mutableListOf()
+        eventsRef.child(eventName).child("expences").child(expenseName).child("users").addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if (snapshot.exists()) {
+                    //println(snapshot.getValue(User::class.java))
+                    for (item in snapshot.children) {
+                        println(item.value)
+                        //val retrieveExpense = item.getValue(Expense::class.java)
+                        if (item != null) {
+                            users.add(item.value.toString())
+                        }
+                    }
+                    callBack(users)
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+        })
+    }
+
 
     override fun createUser() {
         //TODO отправлять запрос на сервера ВК чтобы получить имя текущего пользователя

@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 
-class ExpensesRecyclerAdapter(var values: ArrayList<SharingUser>, var onClickListener: OnClickListener): RecyclerView.Adapter<ExpensesRecyclerViewHolder>() {
+class ExpensesRecyclerAdapter(var values: ArrayList<String>, var onClickListener: OnClickListener): RecyclerView.Adapter<ExpensesRecyclerViewHolder>() {
     interface OnClickListener {
         fun onItemClick(position: Int)
     }
@@ -19,13 +19,13 @@ class ExpensesRecyclerAdapter(var values: ArrayList<SharingUser>, var onClickLis
     }
 
     override fun onBindViewHolder(holder: ExpensesRecyclerViewHolder, position: Int) {
-        holder.username.text = values[position].name
+        holder.username.text = values[position]//.name
 
         holder.itemView.setOnClickListener {
             onClickListener.onItemClick(position)
         }
 
-        holder.checkBox.isChecked = values[position].isPaid
+        //holder.checkBox.isChecked = values[position].isPaid
     }
 
 }

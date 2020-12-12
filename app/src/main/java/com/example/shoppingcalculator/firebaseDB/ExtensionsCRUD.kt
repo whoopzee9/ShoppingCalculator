@@ -12,8 +12,9 @@ interface ExtensionsCRUD {
     fun getEvents(callBack: (MutableList<Event>) -> Unit)
 
     fun createExpense(eventName: String, expenseName: String, price: Double)
-    fun joinExpense(expenseName: String)
-    fun getExpenses(callBack: (MutableList<String?>) -> Unit)
+    fun joinExpense(eventName: String, expenseName: String)
+    fun getExpenses(eventName:String, callBack: (MutableList<Expense>) -> Unit)
+    fun getSharingUsers(eventName:String, expenseName: String, callBack: (MutableList<String>) -> Unit)
 
     fun createUser()
     fun getUsers(callBack: (MutableList<User?>) -> Unit) //TODO Возможно поменять класс??

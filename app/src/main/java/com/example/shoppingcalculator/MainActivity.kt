@@ -44,6 +44,7 @@ class MainActivity : AppCompatActivity() {
             override fun onItemClick(position: Int) {
                 val intent = Intent(applicationContext, EventActivity::class.java)
                 intent.putExtra("currEvent", values[position].name)
+                intent.putExtra("currCode", values[position].code)
                 //intent.putExtra("token", result)
                 //intent.putExtra("username", etLogin!!.text.toString().trim())
                 startActivity(intent)

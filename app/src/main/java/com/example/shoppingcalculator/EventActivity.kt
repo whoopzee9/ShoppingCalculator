@@ -12,6 +12,7 @@ import androidx.core.text.isDigitsOnly
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.shoppingcalculator.firebaseDB.FirebaseDB
+import com.vk.api.sdk.VK
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -21,6 +22,9 @@ import kotlin.collections.ArrayList
     private lateinit var rvExpenses: RecyclerView
      private var firebaseDB = FirebaseDB()
      private lateinit var currEvent: String
+     private lateinit var currCode: String
+     private var values = ArrayList<Expense>()
+     private lateinit var adapter: EventRecyclerAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,21 +33,28 @@ import kotlin.collections.ArrayList
         rvExpenses = findViewById(R.id.rv_expenses)
 
         currEvent = intent.getStringExtra("currEvent")
+        currCode = intent.getStringExtra("currCode")
 
-        var values = ArrayList<Expense>()
-        values.add(Expense("product", "description", false, 123, Date(System.currentTimeMillis()).toString(),123.0, ArrayList()))
+        //var values = ArrayList<Expense>()
+        //values.add(Expense("product", "description", false, 123, Date(System.currentTimeMillis()).toString(),123.0, ArrayList()))
 
-        val adapter = EventRecyclerAdapter(values, object: EventRecyclerAdapter.OnClickListener {
+        adapter = EventRecyclerAdapter(values, object: EventRecyclerAdapter.OnClickListener {
             override fun onItemClick(position: Int) {
                 val intent = Intent(applicationContext, ExpensesActivity::class.java)
-
-
+                intent.putExtra("currExpense", values[position])
+                intent.putExtra("currEvent", currEvent)
                 startActivity(intent)
             }
 
         })
         rvExpenses.adapter = adapter
         rvExpenses.layoutManager = LinearLayoutManager(this)
+
+        firebaseDB.getExpenses(currEvent) {
+            values.clear()
+            values.addAll(it)
+            adapter.notifyDataSetChanged()
+        }
     }
 
     fun onTotalDebtClick(view: View) {
@@ -83,8 +94,22 @@ import kotlin.collections.ArrayList
                 } else {
                     firebaseDB.createExpense(currEvent, name.toString(), maybeDouble)
                     dialog.dismiss()
+
+                    firebaseDB.getExpenses(currEvent) {
+                        values.clear()
+                        values.addAll(it)
+                        adapter.notifyDataSetChanged()
+                    }
                 }
             }
         }
     }
-}
+
+     fun onShowCodeClick(view: View) {
+         val dialog = AlertDialog.Builder(this)
+             .setTitle("Код события")
+             .setMessage("Код: $currCode")
+             .setNeutralButton("Ок", null)
+             .show()
+     }
+ }
