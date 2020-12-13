@@ -19,6 +19,7 @@ import kotlin.collections.ArrayList
 import com.example.shoppingcalculator.firebaseDB.FirebaseDB
 import com.vk.api.sdk.VK
 import com.vk.api.sdk.VKApiCallback
+import com.vk.api.sdk.VKApiConfig
 import com.vk.api.sdk.exceptions.VKApiExecutionException
 import kotlin.collections.HashMap
 
@@ -47,9 +48,10 @@ class MainActivity : AppCompatActivity() {
 
         //values.add(Event("title1","1", ArrayList(), HashMap()))
 
-        val array = intArrayOf(210700286, 218321196)
+        //val array = intArrayOf(210700286, 218321196)
 
-        VK.execute(VKUsersRequest(array), object: VKApiCallback<List<VKUser>> {
+
+        VK.execute(VKUsersRequest(), object: VKApiCallback<List<VKUser>> {
             override fun success(result: List<VKUser>) {
                 println(result)
             }
