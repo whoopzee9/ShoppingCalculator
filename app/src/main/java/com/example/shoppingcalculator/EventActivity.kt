@@ -6,12 +6,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.EditText
+import android.widget.ProgressBar
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.text.isDigitsOnly
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.shoppingcalculator.firebaseDB.FirebaseDB
+import com.example.shoppingcalculator.viewmodels.ExpensesViewModel
 import com.vk.api.sdk.VK
 import java.text.SimpleDateFormat
 import java.util.*
@@ -25,6 +29,7 @@ import kotlin.collections.ArrayList
      private lateinit var currCode: String
      private var values = ArrayList<Expense>()
      private lateinit var adapter: EventRecyclerAdapter
+     private lateinit var viewModel: ExpensesViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,23 +43,44 @@ import kotlin.collections.ArrayList
         //var values = ArrayList<Expense>()
         //values.add(Expense("product", "description", false, 123, Date(System.currentTimeMillis()).toString(),123.0, ArrayList()))
 
+        viewModel = ViewModelProviders.of(this).get(ExpensesViewModel::class.java)
+
+        firebaseDB.getExpenses(currEvent) {
+            firebaseDB.listenExpenseChange(currEvent, it) {
+                viewModel.listenChange(currEvent)
+            }
+        }
+
         adapter = EventRecyclerAdapter(values, object: EventRecyclerAdapter.OnClickListener {
             override fun onItemClick(position: Int) {
                 val intent = Intent(applicationContext, ExpensesActivity::class.java)
-                intent.putExtra("currExpense", values[position])
+                intent.putExtra("currExpense", adapter.values[position])
                 intent.putExtra("currEvent", currEvent)
                 startActivity(intent)
             }
 
+            override fun onCheckBoxClick(position: Int, isChecked: Boolean) {
+                firebaseDB.changeExpenseIsBought(currEvent, values[position].name, isChecked)
+            }
         })
         rvExpenses.adapter = adapter
         rvExpenses.layoutManager = LinearLayoutManager(this)
 
-        firebaseDB.getExpenses(currEvent) {
+        val progressBar: ProgressBar = findViewById(R.id.progressBarEvents)
+        progressBar.visibility = View.VISIBLE
+
+        viewModel.getExpenses().observe(this, androidx.lifecycle.Observer {
+            adapter.values = it as ArrayList<Expense>
+            adapter.notifyDataSetChanged()
+            progressBar.visibility = View.GONE
+        })
+        viewModel.updateExpenses(currEvent)
+        /*firebaseDB.getExpenses(currEvent) {
             values.clear()
             values.addAll(it)
             adapter.notifyDataSetChanged()
-        }
+            progressBar.visibility = View.GONE
+        }*/
     }
 
     fun onTotalDebtClick(view: View) {
@@ -92,14 +118,18 @@ import kotlin.collections.ArrayList
                     placeFormView.findViewById<EditText>(R.id.et_expense_cost).hint =
                         "Введите число"
                 } else {
+                    val progressBar: ProgressBar = findViewById(R.id.progressBarEvents)
+                    progressBar.visibility = View.VISIBLE
                     firebaseDB.createExpense(currEvent, name.toString(), maybeDouble)
                     dialog.dismiss()
 
-                    firebaseDB.getExpenses(currEvent) {
+                    viewModel.updateExpenses(currEvent)
+                    /*firebaseDB.getExpenses(currEvent) {
                         values.clear()
                         values.addAll(it)
                         adapter.notifyDataSetChanged()
-                    }
+                        progressBar.visibility = View.GONE
+                    }*/
                 }
             }
         }

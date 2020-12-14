@@ -6,13 +6,18 @@ import android.text.Editable
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.EditText
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.shoppingcalculator.firebaseDB.FirebaseDB
+import com.example.shoppingcalculator.viewmodels.ExpensesViewModel
+import com.example.shoppingcalculator.viewmodels.SharingViewModel
 import com.google.firebase.FirebaseApp
+import java.lang.NumberFormatException
 import kotlin.math.cos
 
 class ExpensesActivity: AppCompatActivity() {
@@ -25,6 +30,7 @@ class ExpensesActivity: AppCompatActivity() {
     private lateinit var currEvent: String
     private var values = ArrayList<String>()
     private lateinit var adapter: ExpensesRecyclerAdapter
+    private lateinit var viewModel: SharingViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,16 +46,18 @@ class ExpensesActivity: AppCompatActivity() {
         currExpense = intent.getParcelableExtra("currExpense")
         currEvent = intent.getStringExtra("currEvent")
 
-        firebaseDB.getSharingUsers(currEvent, currExpense.name) {
-            values.clear()
-            values.addAll(it)
-            adapter.notifyDataSetChanged()
-        }
-
         name.text = currExpense.name
         cost.text = currExpense.price.toString()
         //var values = ArrayList<SharingUser>()
         //values.add(SharingUser("Alex", false))
+
+        viewModel = ViewModelProviders.of(this).get(SharingViewModel::class.java)
+
+        firebaseDB.getSharingUsers(currEvent, currExpense.name) {
+            firebaseDB.listenSharingUsersChange(currEvent, currExpense.name, it) {
+                viewModel.listenChange(currEvent, currExpense.name)
+            }
+        }
 
         adapter = ExpensesRecyclerAdapter(values, object: ExpensesRecyclerAdapter.OnClickListener {
             override fun onItemClick(position: Int) {
@@ -62,16 +70,26 @@ class ExpensesActivity: AppCompatActivity() {
         rvUsers.adapter = adapter
         rvUsers.layoutManager = LinearLayoutManager(this)
 
-
+        viewModel.getSharingUsers().observe(this, androidx.lifecycle.Observer {
+            adapter.values = it as ArrayList<String>
+            adapter.notifyDataSetChanged()
+            //progressBar.visibility = View.GONE
+        })
+        viewModel.updateUsers(currEvent, currExpense.name)
     }
 
     fun onAddSharingClick(view: View) {
+        val progressBar: ProgressBar = findViewById(R.id.progressBarExpenses)
+        progressBar.visibility = View.VISIBLE
         firebaseDB.joinExpense(currEvent, currExpense.name)
-        firebaseDB.getSharingUsers(currEvent, currExpense.name) {
+
+        viewModel.updateUsers(currEvent, currExpense.name)
+        /*firebaseDB.getSharingUsers(currEvent, currExpense.name) {
             values.clear()
             values.addAll(it)
             adapter.notifyDataSetChanged()
-        }
+            progressBar.visibility = View.GONE
+        }*/
     }
 
     fun onEditExpenseClick(view: View) {
@@ -91,7 +109,14 @@ class ExpensesActivity: AppCompatActivity() {
             .show()
 
         dialog.getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener {
-            //TODO добавление нового продукта
+            var price: Double
+            try {
+                price = etCost.text.toString().toDouble()
+            } catch (e: NumberFormatException) {
+                dialog.dismiss()
+                return@setOnClickListener
+            }
+            firebaseDB.changeExpensePrice(currEvent, currExpense.name, price)
             dialog.dismiss()
         }
     }

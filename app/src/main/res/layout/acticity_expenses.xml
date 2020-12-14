@@ -6,6 +6,17 @@
     android:layout_height="match_parent"
     tools:context=".ExpensesActivity">
 
+    <ProgressBar
+        android:id="@+id/progressBarExpenses"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@+id/rv_sharing_users"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <androidx.cardview.widget.CardView
         android:id="@+id/cv_cardView"
         android:layout_width="match_parent"

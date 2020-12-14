@@ -1,17 +1,20 @@
 package com.example.shoppingcalculator.viewmodels
 
+import com.example.shoppingcalculator.Expense
+import com.example.shoppingcalculator.firebaseDB.FirebaseDB
+
 class ExpensesRepository {
     companion object {
         var instance = ExpensesRepository()
     }
 
-    //var mFirebaseDB = FirebaseDB()
+    var firebaseDB = FirebaseDB()
 
-    /*fun getGroupFromDB(callBack: (MutableList<User?>) -> Unit) {
+    fun getExpenses(eventName:String, callBack: (MutableList<Expense>) -> Unit) {
         //TODO somehow retrieve data from DB
-        val current = CurrentGroup.instance
-        if (current.groupName.isNotEmpty()) {
-            mFirebaseDB.getUsersFromGroup(current.groupName, callBack)
+        //val current = EventRepository.instance
+        if (eventName.isNotEmpty()) {
+            firebaseDB.getExpenses(eventName, callBack)
         }
-    }*/
+    }
 }

@@ -27,6 +27,7 @@ class FirebaseDB : ExtensionsCRUD {
 
     private lateinit var eventMessageListener: ValueEventListener
     private lateinit var expenseMessageListener: ValueEventListener
+    private lateinit var sharingUserMessageListener: ValueEventListener
 
     //Authenticated user
     //var user = mAuth.currentUser
@@ -83,7 +84,7 @@ class FirebaseDB : ExtensionsCRUD {
     override fun createExpense(eventName: String, expenseName: String, price: Double) {
         val users = HashMap<String, String>()
         users.put(VK.getUserId().toString(), VK.getUserId().toString())
-        eventsRef.child(eventName).child("expences").child("expenseID").setValue(Expense(expenseName, "desc", false, VK.getUserId(), Date(System.currentTimeMillis()).toString(), price, users))
+        eventsRef.child(eventName).child("expences").child(expenseName).setValue(Expense(expenseName, "desc", false, VK.getUserId(), Date(System.currentTimeMillis()).toString(), price, users))
 
     }
 
@@ -114,6 +115,18 @@ class FirebaseDB : ExtensionsCRUD {
                 TODO("Not yet implemented")
             }
         })
+    }
+
+    override fun changeExpenseIsBought(eventName: String, expenseName: String, isBought: Boolean) {
+        if (eventName.isNotEmpty() && expenseName.isNotEmpty()) {
+            eventsRef.child(eventName).child("expences").child(expenseName).child("bought").setValue(isBought)
+        }
+    }
+
+    override fun changeExpensePrice(eventName: String, expenseName: String, price: Double) {
+        if (eventName.isNotEmpty() && expenseName.isNotEmpty()) {
+            eventsRef.child(eventName).child("expences").child(expenseName).child("price").setValue(price)
+        }
     }
 
     override fun getSharingUsers(
@@ -179,19 +192,100 @@ class FirebaseDB : ExtensionsCRUD {
         TODO("Not yet implemented")
     }
 
-    override fun listenEventChange(users: ArrayList<String?>, callBack: (Event?) -> Unit) {
-        TODO("Not yet implemented")
+    override fun listenEventChange(expenses: MutableList<Event>, callBack: (Event?) -> Unit) {
+        eventMessageListener = object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    val message = dataSnapshot.getValue(Event::class.java)
+                    if (message != null) {
+                        callBack(message)
+                    }
+                }
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+            }
+        }
+
+        // id users
+        //var listUserPath = listOf(user!!.uid, "0MdOWT14PrP6eESIOtqOQ93REA62")
+        var listExpenses = expenses
+        for (item in listExpenses) {
+            if (item != null) {
+                eventsRef.child(item.name).addValueEventListener(eventMessageListener)
+            }
+        }
     }
 
     override fun detachListEvents(listEvents: ArrayList<Event?>) {
         TODO("Not yet implemented")
     }
 
-    override fun listenExpenseChange(users: ArrayList<String?>, callBack: (Expense?) -> Unit) {
-        TODO("Not yet implemented")
+    override fun listenExpenseChange(eventName: String, expenses: MutableList<Expense>, callBack: (Expense) -> Unit) {
+        expenseMessageListener = object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    val message = dataSnapshot.getValue(Expense::class.java)
+                    if (message != null) {
+                        callBack(message)
+                    }
+                }
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+            }
+        }
+
+        // id users
+        //var listUserPath = listOf(user!!.uid, "0MdOWT14PrP6eESIOtqOQ93REA62")
+        var listExpenses = expenses
+        for (item in listExpenses) {
+            if (item != null) {
+                eventsRef.child(eventName).child("expences").child(item.name).addValueEventListener(expenseMessageListener)
+            }
+        }
     }
 
     override fun detachListExpenses(listExpenses: ArrayList<Expense?>) {
+        TODO("Not yet implemented")
+    }
+
+    override fun listenSharingUsersChange(
+        eventName: String,
+        expenseName: String,
+        users: MutableList<String>,
+        callBack: (String) -> Unit
+    ) {
+        sharingUserMessageListener = object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    println("DATA CHAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAANGE")
+                    val message = dataSnapshot.getValue(String::class.java)
+                    if (message != null) {
+                        callBack(message)
+                    }
+                }
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+            }
+        }
+
+        // id users
+        //var listUserPath = listOf(user!!.uid, "0MdOWT14PrP6eESIOtqOQ93REA62")
+        var listUsers = users
+        for (item in listUsers) {
+            if (item != null) {
+                eventsRef.child(eventName)
+                    .child("expences")
+                    .child(expenseName)
+                    .child("users")
+                    .child(item).addValueEventListener(sharingUserMessageListener)
+            }
+        }
+    }
+
+    override fun detachListSharingUsers(listExpenses: ArrayList<String>) {
         TODO("Not yet implemented")
     }
 

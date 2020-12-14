@@ -7,8 +7,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.EditText
+import android.widget.ProgressBar
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.get
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.shoppingcalculator.VKAPI.VKUser
@@ -17,6 +19,8 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 import com.example.shoppingcalculator.firebaseDB.FirebaseDB
+import com.example.shoppingcalculator.viewmodels.EventViewModel
+import com.example.shoppingcalculator.viewmodels.ExpensesViewModel
 import com.vk.api.sdk.VK
 import com.vk.api.sdk.VKApiCallback
 import com.vk.api.sdk.VKApiConfig
@@ -28,6 +32,7 @@ class MainActivity : AppCompatActivity() {
     var values = ArrayList<Event>()
     var firebaseDB = FirebaseDB()
     lateinit var adapter: MainRecyclerAdapter
+    lateinit var viewModel: EventViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,12 +64,19 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
+        viewModel = ViewModelProviders.of(this).get(EventViewModel::class.java)
+
+        firebaseDB.getEvents {
+            firebaseDB.listenEventChange(it) {
+                viewModel.listenChange()
+            }
+        }
 
         adapter = MainRecyclerAdapter(values, object : MainRecyclerAdapter.OnClickListener {
             override fun onItemClick(position: Int) {
                 val intent = Intent(applicationContext, EventActivity::class.java)
-                intent.putExtra("currEvent", values[position].name)
-                intent.putExtra("currCode", values[position].code)
+                intent.putExtra("currEvent", adapter.values[position].name)
+                intent.putExtra("currCode", adapter.values[position].code)
                 //intent.putExtra("token", result)
                 //intent.putExtra("username", etLogin!!.text.toString().trim())
                 startActivity(intent)
@@ -74,14 +86,30 @@ class MainActivity : AppCompatActivity() {
         rvEvents.adapter = adapter
         rvEvents.layoutManager = LinearLayoutManager(this)
 
-        firebaseDB.getEvents {
+        val progressBar: ProgressBar = findViewById(R.id.progressBarMain)
+        progressBar.visibility = View.VISIBLE
+
+        viewModel.getEvents().observe(this, androidx.lifecycle.Observer {
+            val newValues = ArrayList<Event>()
+            for (item in it) {
+                if (item.users.containsValue(VK.getUserId().toString())) {
+                    newValues.add(item)
+                }
+            }
+            adapter.values = newValues
+            adapter.notifyDataSetChanged()
+            progressBar.visibility = View.GONE
+        })
+        viewModel.updateEvents()
+        /*firebaseDB.getEvents {
             for (item in it) {
                 if (item.users.containsValue(VK.getUserId().toString())) {
                     values.add(item)
                 }
             }
             adapter.notifyDataSetChanged()
-        }
+            progressBar.visibility = View.GONE
+        }*/
 
     }
 
@@ -128,16 +156,20 @@ class MainActivity : AppCompatActivity() {
             if (key.isBlank()) {
                 placeFormView.findViewById<EditText>(R.id.et_EventKey).hint = "Введите ключ"
             } else {
+                val progressBar: ProgressBar = findViewById(R.id.progressBarMain)
+                progressBar.visibility = View.VISIBLE
                 firebaseDB.joinEvent(key.toString())
                 dialog.dismiss()
-                firebaseDB.getEvents {
+                viewModel.updateEvents()
+                /*firebaseDB.getEvents {
                     for (item in it) {
                         if (item.users.containsValue(VK.getUserId().toString())) {
                             values.add(item)
                         }
                     }
                     adapter.notifyDataSetChanged()
-                }
+                    progressBar.visibility = View.GONE
+                }*/
             }
         }
 
