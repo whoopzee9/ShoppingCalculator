@@ -2,6 +2,7 @@ package com.example.shoppingcalculator
 
 import android.content.DialogInterface
 import android.content.Intent
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -25,6 +26,7 @@ import com.vk.api.sdk.VK
 import com.vk.api.sdk.VKApiCallback
 import com.vk.api.sdk.VKApiConfig
 import com.vk.api.sdk.exceptions.VKApiExecutionException
+import java.time.LocalDate
 import kotlin.collections.HashMap
 
 class MainActivity : AppCompatActivity() {
@@ -44,10 +46,11 @@ class MainActivity : AppCompatActivity() {
         val config = applicationContext.resources.configuration
         config.setLocale(Locale("ru"))
 
+
         var list = ArrayList<Int>()
         //list.add(User(ArrayList(), "user1"))
         //list.add(User(ArrayList(), "user2"))
-        val sdf = SimpleDateFormat("dd/M/yyyy hh:mm:ss")
+        val sdf = SimpleDateFormat("dd.M.yyyy hh:mm")
         val currentDate = sdf.format(Date())
         println(Date(System.currentTimeMillis()).toString())
 

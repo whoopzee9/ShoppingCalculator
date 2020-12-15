@@ -7,30 +7,30 @@ import com.example.shoppingcalculator.Event
 import com.example.shoppingcalculator.Expense
 
 class ExpensesViewModel: ViewModel() {
-    var expenses: MutableLiveData<List<Expense>> = MutableLiveData()
+
     var repository = ExpensesRepository.instance
 
     fun init() {
         //repository = GroupRepository.instance
-        expenses = MutableLiveData()
+        repository.expenses = MutableLiveData()
         //updateExpenses()
     }
 
     fun getExpenses(): LiveData<List<Expense>> {
-        return expenses
+        return repository.expenses
     }
 
     fun updateExpenses(eventName: String) {
         //println("before updating group")
         repository.getExpenses(eventName) {
             println("updating group")
-            expenses.postValue(it)
+            repository.expenses.postValue(it)
 
         }
     }
 
     fun setExpenses(data: List<Expense>) {
-        expenses.value = data
+        repository.expenses.value = data
     }
 
     //test

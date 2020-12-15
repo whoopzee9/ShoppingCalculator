@@ -6,29 +6,29 @@ import androidx.lifecycle.ViewModel
 import com.example.shoppingcalculator.Event
 
 class EventViewModel : ViewModel() {
-    var event: MutableLiveData<List<Event>> = MutableLiveData()
+
     var repository = EventRepository.instance
 
     fun init() {
         //repository = GroupRepository.instance
-        event = MutableLiveData()
+        repository.event = MutableLiveData()
         //updateEvent()
 
     }
 
     fun getEvents(): LiveData<List<Event>> {
-        return event
+        return repository.event
     }
 
     fun updateEvents() {
         //println("before updating group")
         repository.getEvents {
-            event.postValue(it)
+            repository.event.postValue(it)
         }
     }
 
     fun setEvent(data: List<Event>) {
-        event.value = data
+        repository.event.value = data
     }
 
     //test

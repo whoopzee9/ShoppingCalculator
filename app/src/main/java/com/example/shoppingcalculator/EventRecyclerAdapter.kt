@@ -26,7 +26,7 @@ class EventRecyclerAdapter(var values: ArrayList<Expense>, var onClickListener: 
             onClickListener.onItemClick(position)
         }
 
-        holder.description.text = "Всего: " + values[position].price.toString()
+        holder.description.text = "Всего: " + values[position].price.toString() + " руб."
         holder.checkBox.isChecked = values[position].isBought
 
         holder.checkBox.setOnClickListener {

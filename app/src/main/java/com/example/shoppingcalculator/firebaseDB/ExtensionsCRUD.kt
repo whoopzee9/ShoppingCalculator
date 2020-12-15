@@ -14,6 +14,7 @@ interface ExtensionsCRUD {
 
     fun createExpense(eventName: String, expenseName: String, price: Double)
     fun joinExpense(eventName: String, expenseName: String)
+    fun exitExpense(eventName: String, expenseName: String)
     fun getExpenses(eventName:String, callBack: (MutableList<Expense>) -> Unit)
     fun changeExpenseIsBought(eventName: String, expenseName: String, isBought: Boolean)
     fun changeExpensePrice(eventName: String, expenseName: String, price: Double)
@@ -23,6 +24,9 @@ interface ExtensionsCRUD {
     fun getUsers(callBack: (MutableList<User?>) -> Unit) //TODO Возможно поменять класс??
     fun getUser(userId: String, callBack: (MutableList<User>) -> Unit)
 
+    fun getPaymentUsers(eventName: String, callBack: (MutableList<PaymentUser>) -> Unit)
+    fun setPaymentUsers(eventName: String, users: ArrayList<PaymentUser>)
+
     fun listenEventChange(expenses: MutableList<Event>, callBack: ((Event?) -> Unit))
     fun detachListEvents(listEvents: ArrayList<Event?>)
 
@@ -31,4 +35,7 @@ interface ExtensionsCRUD {
 
     fun listenSharingUsersChange(eventName: String, expenseName: String, users: MutableList<String>, callBack: ((String) -> Unit))
     fun detachListSharingUsers(listExpenses: ArrayList<String>)
+
+    fun listenPaymentUsersChange(eventName: String, users: MutableList<PaymentUser>, callBack: ((PaymentUser) -> Unit))
+    fun detachListPaymentUsers(listExpenses: ArrayList<PaymentUser>)
 }

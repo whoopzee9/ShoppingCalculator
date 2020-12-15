@@ -10,13 +10,19 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.shoppingcalculator.VKAPI.VKUser
+import com.example.shoppingcalculator.VKAPI.VKUsersRequest
 import com.example.shoppingcalculator.firebaseDB.FirebaseDB
+import com.example.shoppingcalculator.viewmodels.DebtViewModel
 import com.example.shoppingcalculator.viewmodels.ExpensesViewModel
 import com.example.shoppingcalculator.viewmodels.SharingViewModel
 import com.google.firebase.FirebaseApp
+import com.vk.api.sdk.VK
+import com.vk.api.sdk.VKApiCallback
 import java.lang.NumberFormatException
 import kotlin.math.cos
 
@@ -24,6 +30,7 @@ class ExpensesActivity: AppCompatActivity() {
 
     private lateinit var name: TextView
     private lateinit var cost: TextView
+    private lateinit var buyer: TextView
     private lateinit var rvUsers: RecyclerView
     private lateinit var firebaseDB: FirebaseDB
     private lateinit var currExpense: Expense
@@ -31,6 +38,7 @@ class ExpensesActivity: AppCompatActivity() {
     private var values = ArrayList<String>()
     private lateinit var adapter: ExpensesRecyclerAdapter
     private lateinit var viewModel: SharingViewModel
+    private lateinit var debtViewModel: DebtViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,6 +46,8 @@ class ExpensesActivity: AppCompatActivity() {
 
         name = findViewById(R.id.tv_expense_name)
         cost = findViewById(R.id.tv_expense_cost)
+        buyer = findViewById(R.id.tv_expense_buyer)
+
         rvUsers = findViewById(R.id.rv_sharing_users)
 
         FirebaseApp.initializeApp(applicationContext)
@@ -47,11 +57,26 @@ class ExpensesActivity: AppCompatActivity() {
         currEvent = intent.getStringExtra("currEvent")
 
         name.text = currExpense.name
-        cost.text = currExpense.price.toString()
+        cost.text = "Стоимость: " + currExpense.price.toString() + " руб."
+
+        val array = intArrayOf(currExpense.buyer)
+        VK.execute(VKUsersRequest(array), object: VKApiCallback<List<VKUser>> {
+            override fun success(result: List<VKUser>) {
+                var users: String = ""
+                for (user in result) {
+                    users += user.firstName + " " + user.lastName
+                }
+                buyer.text = "Покупатель: " + users
+            }
+            override fun fail(error: Exception) {
+            }
+        })
         //var values = ArrayList<SharingUser>()
         //values.add(SharingUser("Alex", false))
 
         viewModel = ViewModelProviders.of(this).get(SharingViewModel::class.java)
+
+        debtViewModel = ViewModelProviders.of(this).get(DebtViewModel::class.java)
 
         firebaseDB.getSharingUsers(currEvent, currExpense.name) {
             firebaseDB.listenSharingUsersChange(currEvent, currExpense.name, it) {
@@ -73,7 +98,8 @@ class ExpensesActivity: AppCompatActivity() {
         viewModel.getSharingUsers().observe(this, androidx.lifecycle.Observer {
             adapter.values = it as ArrayList<String>
             adapter.notifyDataSetChanged()
-            //progressBar.visibility = View.GONE
+            val progressBar: ProgressBar = findViewById(R.id.progressBarExpenses)
+            progressBar.visibility = View.GONE
         })
         viewModel.updateUsers(currEvent, currExpense.name)
     }
@@ -84,12 +110,22 @@ class ExpensesActivity: AppCompatActivity() {
         firebaseDB.joinExpense(currEvent, currExpense.name)
 
         viewModel.updateUsers(currEvent, currExpense.name)
+        debtViewModel.updatePaymentUsers(currEvent)
         /*firebaseDB.getSharingUsers(currEvent, currExpense.name) {
             values.clear()
             values.addAll(it)
             adapter.notifyDataSetChanged()
             progressBar.visibility = View.GONE
         }*/
+    }
+
+    fun onRemoveSharingClick(view: View) {
+        val progressBar: ProgressBar = findViewById(R.id.progressBarExpenses)
+        progressBar.visibility = View.VISIBLE
+        firebaseDB.exitExpense(currEvent, currExpense.name)
+
+        viewModel.updateUsers(currEvent, currExpense.name)
+        debtViewModel.updatePaymentUsers(currEvent)
     }
 
     fun onEditExpenseClick(view: View) {
@@ -120,4 +156,5 @@ class ExpensesActivity: AppCompatActivity() {
             dialog.dismiss()
         }
     }
+
 }

@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.EditText
 import android.widget.ProgressBar
+import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.text.isDigitsOnly
@@ -15,6 +16,8 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.shoppingcalculator.firebaseDB.FirebaseDB
+import com.example.shoppingcalculator.viewmodels.DebtViewModel
+import com.example.shoppingcalculator.viewmodels.EventViewModel
 import com.example.shoppingcalculator.viewmodels.ExpensesViewModel
 import com.vk.api.sdk.VK
 import java.text.SimpleDateFormat
@@ -24,18 +27,21 @@ import kotlin.collections.ArrayList
  class EventActivity: AppCompatActivity() {
 
     private lateinit var rvExpenses: RecyclerView
+     private lateinit var currDebt: TextView
      private var firebaseDB = FirebaseDB()
      private lateinit var currEvent: String
      private lateinit var currCode: String
      private var values = ArrayList<Expense>()
      private lateinit var adapter: EventRecyclerAdapter
      private lateinit var viewModel: ExpensesViewModel
+     private lateinit var debtViewModel: DebtViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_event)
 
         rvExpenses = findViewById(R.id.rv_expenses)
+        currDebt = findViewById(R.id.tv_total_debt)
 
         currEvent = intent.getStringExtra("currEvent")
         currCode = intent.getStringExtra("currCode")
@@ -44,6 +50,16 @@ import kotlin.collections.ArrayList
         //values.add(Expense("product", "description", false, 123, Date(System.currentTimeMillis()).toString(),123.0, ArrayList()))
 
         viewModel = ViewModelProviders.of(this).get(ExpensesViewModel::class.java)
+
+        debtViewModel = ViewModelProviders.of(this).get(DebtViewModel::class.java)
+        debtViewModel.getUsers().observe(this, androidx.lifecycle.Observer {
+            var total = 0.0
+            for (item in it) {
+                total += item.payment
+            }
+            currDebt.text = "Общая сумма: $total руб."
+        })
+        debtViewModel.updatePaymentUsers(currEvent)
 
         firebaseDB.getExpenses(currEvent) {
             firebaseDB.listenExpenseChange(currEvent, it) {
@@ -75,17 +91,12 @@ import kotlin.collections.ArrayList
             progressBar.visibility = View.GONE
         })
         viewModel.updateExpenses(currEvent)
-        /*firebaseDB.getExpenses(currEvent) {
-            values.clear()
-            values.addAll(it)
-            adapter.notifyDataSetChanged()
-            progressBar.visibility = View.GONE
-        }*/
+
     }
 
     fun onTotalDebtClick(view: View) {
         val intent = Intent(applicationContext, DebtActivity::class.java)
-
+        intent.putExtra("currEvent", currEvent)
 
         startActivity(intent)
     }

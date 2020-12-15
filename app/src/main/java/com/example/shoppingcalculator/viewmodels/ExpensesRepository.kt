@@ -1,5 +1,6 @@
 package com.example.shoppingcalculator.viewmodels
 
+import androidx.lifecycle.MutableLiveData
 import com.example.shoppingcalculator.Expense
 import com.example.shoppingcalculator.firebaseDB.FirebaseDB
 
@@ -7,6 +8,8 @@ class ExpensesRepository {
     companion object {
         var instance = ExpensesRepository()
     }
+
+    var expenses: MutableLiveData<List<Expense>> = MutableLiveData()
 
     var firebaseDB = FirebaseDB()
 

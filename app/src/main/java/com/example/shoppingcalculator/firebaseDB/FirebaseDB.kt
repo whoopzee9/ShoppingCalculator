@@ -28,6 +28,7 @@ class FirebaseDB : ExtensionsCRUD {
     private lateinit var eventMessageListener: ValueEventListener
     private lateinit var expenseMessageListener: ValueEventListener
     private lateinit var sharingUserMessageListener: ValueEventListener
+    private lateinit var paymentUserMessageListener: ValueEventListener
 
     //Authenticated user
     //var user = mAuth.currentUser
@@ -40,8 +41,10 @@ class FirebaseDB : ExtensionsCRUD {
             val users = HashMap<String, String>()
             users.put(VK.getUserId().toString(), VK.getUserId().toString())
             val expenses = ArrayList<Expense>()
-            eventsRef.child(eventName).setValue(Event(eventName, secretCode, expenses, users))
+
+            eventsRef.child(eventName).setValue(Event(eventName, secretCode, Calendar.getInstance().toString(), expenses, users))
             usersRef.child(VK.getUserId().toString()).child("events").child(eventName).setValue(eventName)
+            usersRef.child(VK.getUserId().toString()).child("events").child(eventName).addValueEventListener(eventMessageListener)
         }
     }
 
@@ -85,12 +88,19 @@ class FirebaseDB : ExtensionsCRUD {
         val users = HashMap<String, String>()
         users.put(VK.getUserId().toString(), VK.getUserId().toString())
         eventsRef.child(eventName).child("expences").child(expenseName).setValue(Expense(expenseName, "desc", false, VK.getUserId(), Date(System.currentTimeMillis()).toString(), price, users))
-
+        eventsRef.child(eventName).child("expences").child(expenseName).addValueEventListener(expenseMessageListener)
     }
 
     override fun joinExpense(eventName: String, expenseName: String) {
         if (eventName.isNotEmpty() && expenseName.isNotEmpty()) {
             eventsRef.child(eventName).child("expences").child(expenseName).child("users").child(VK.getUserId().toString()).setValue(VK.getUserId().toString())
+        }
+    }
+
+    override fun exitExpense(eventName: String, expenseName: String) {
+        if (eventName.isNotEmpty() && expenseName.isNotEmpty()) {
+            //eventsRef.child(eventName).child("expences").child(expenseName).child("users").child(VK.getUserId().toString()).removeEventListener(expenseMessageListener)
+            eventsRef.child(eventName).child("expences").child(expenseName).child("users").child(VK.getUserId().toString()).removeValue()
         }
     }
 
@@ -188,17 +198,64 @@ class FirebaseDB : ExtensionsCRUD {
 
     }
 
+    override fun getPaymentUsers(eventName: String, callBack: (MutableList<PaymentUser>) -> Unit) {
+        var users: MutableList<PaymentUser> = mutableListOf()
+        usersRef.child(VK.getUserId().toString()).child("events").child(eventName).child("users").addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if (snapshot.exists()) {
+                    //println(snapshot.getValue(User::class.java))
+                    for (item in snapshot.children) {
+                        //println(item.value)
+                        val retrieve = item.getValue(PaymentUser::class.java)
+                        if (retrieve != null) {
+                            users.add(retrieve)
+                        }
+                    }
+                    callBack(users)
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+        })
+    }
+
+    override fun setPaymentUsers(eventName: String, users: ArrayList<PaymentUser>) {
+        for (item in users) {
+            usersRef.child(VK.getUserId().toString()).child("events").child(eventName).child("users").child(item.id.toString()).setValue(item)
+            usersRef.child(VK.getUserId().toString()).child("events").child(eventName).child("users").child(item.id.toString()).addValueEventListener(paymentUserMessageListener)
+        }
+    }
+
     override fun getUsers(callBack: (MutableList<User?>) -> Unit) {
         TODO("Not yet implemented")
     }
 
     override fun listenEventChange(expenses: MutableList<Event>, callBack: (Event?) -> Unit) {
+        paymentUserMessageListener = object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    //println("DATA CHAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAANGE")
+                    val message = dataSnapshot.getValue(PaymentUser::class.java)
+                    if (message != null) {
+                        //callBack(message)
+                    }
+                }
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+            }
+        }
         eventMessageListener = object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 if (dataSnapshot.exists()) {
                     val message = dataSnapshot.getValue(Event::class.java)
                     if (message != null) {
                         callBack(message)
+                        calculateNewPaymentUsers(message.name) {
+                            setPaymentUsers(message.name, it)
+                        }
                     }
                 }
             }
@@ -222,12 +279,30 @@ class FirebaseDB : ExtensionsCRUD {
     }
 
     override fun listenExpenseChange(eventName: String, expenses: MutableList<Expense>, callBack: (Expense) -> Unit) {
+        paymentUserMessageListener = object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    //println("DATA CHAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAANGE")
+                    val message = dataSnapshot.getValue(PaymentUser::class.java)
+                    if (message != null) {
+                        //callBack(message)
+                    }
+                }
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+            }
+        }
+
         expenseMessageListener = object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 if (dataSnapshot.exists()) {
                     val message = dataSnapshot.getValue(Expense::class.java)
                     if (message != null) {
                         callBack(message)
+                        calculateNewPaymentUsers(eventName) {
+                            setPaymentUsers(eventName, it)
+                        }
                     }
                 }
             }
@@ -256,6 +331,20 @@ class FirebaseDB : ExtensionsCRUD {
         users: MutableList<String>,
         callBack: (String) -> Unit
     ) {
+        paymentUserMessageListener = object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    //println("DATA CHAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAANGE")
+                    val message = dataSnapshot.getValue(PaymentUser::class.java)
+                    if (message != null) {
+                        //callBack(message)
+                    }
+                }
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+            }
+        }
         sharingUserMessageListener = object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 if (dataSnapshot.exists()) {
@@ -263,6 +352,9 @@ class FirebaseDB : ExtensionsCRUD {
                     val message = dataSnapshot.getValue(String::class.java)
                     if (message != null) {
                         callBack(message)
+                        calculateNewPaymentUsers(eventName) {
+                            setPaymentUsers(eventName, it)
+                        }
                     }
                 }
             }
@@ -286,8 +378,77 @@ class FirebaseDB : ExtensionsCRUD {
     }
 
     override fun detachListSharingUsers(listExpenses: ArrayList<String>) {
+
+    }
+
+    override fun listenPaymentUsersChange(
+        eventName: String,
+        users: MutableList<PaymentUser>,
+        callBack: (PaymentUser) -> Unit
+    ) {
+        paymentUserMessageListener = object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    //println("DATA CHAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAANGE")
+                    val message = dataSnapshot.getValue(PaymentUser::class.java)
+                    if (message != null) {
+                        callBack(message)
+                    }
+                }
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+            }
+        }
+
+        // id users
+        //var listUserPath = listOf(user!!.uid, "0MdOWT14PrP6eESIOtqOQ93REA62")
+        //TODO возможно добавить здесь слушателя сразу для всей ветки Users
+        var listUsers = users
+        for (item in listUsers) {
+            if (item != null) {
+                usersRef.child(VK.getUserId().toString())
+                    .child("events")
+                    .child(eventName)
+                    .child("users")
+                    .child(item.id.toString()).addValueEventListener(paymentUserMessageListener)
+            }
+        }
+    }
+
+    override fun detachListPaymentUsers(listExpenses: ArrayList<PaymentUser>) {
         TODO("Not yet implemented")
     }
 
 
+
+    fun calculateNewPaymentUsers(eventName: String, callBack: (ArrayList<PaymentUser>) -> Unit) {
+        getExpenses(eventName) {
+            var users = ArrayList<PaymentUser>()
+
+            for (item in it) {
+                var payment = item.price / item.users.size
+                var isPresent: Boolean = false
+                var isSharing: Boolean = false
+                for (user in item.users) {
+                    if (user.value == VK.getUserId().toString()) {
+                        isSharing = true
+                    }
+                }
+                if (!isSharing) {
+                    continue
+                }
+                for (i in 0 until users.size) {
+                    if (item.buyer == users[i].id) {
+                        isPresent = true
+                        users[i].payment += payment
+                    }
+                }
+                if (!isPresent && item.buyer != VK.getUserId()) {
+                    users.add(PaymentUser(item.buyer, payment, false))
+                }
+            }
+            callBack(users)
+        }
+    }
 }

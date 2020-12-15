@@ -3,6 +3,10 @@ package com.example.shoppingcalculator
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.shoppingcalculator.VKAPI.VKUser
+import com.example.shoppingcalculator.VKAPI.VKUsersRequest
+import com.vk.api.sdk.VK
+import com.vk.api.sdk.VKApiCallback
 
 class DebtRecyclerAdapter(var values: ArrayList<PaymentUser>, var onClickListener: OnClickListener): RecyclerView.Adapter<DebtRecyclerViewHolder>() {
     interface OnClickListener {
@@ -19,13 +23,25 @@ class DebtRecyclerAdapter(var values: ArrayList<PaymentUser>, var onClickListene
     }
 
     override fun onBindViewHolder(holder: DebtRecyclerViewHolder, position: Int) {
-        holder.username.text = values[position].name
+
+        val array = intArrayOf(values[position].id)
+        VK.execute(VKUsersRequest(array), object: VKApiCallback<List<VKUser>> {
+            override fun success(result: List<VKUser>) {
+                var users: String = ""
+                for (user in result) {
+                    users += user.firstName + " " + user.lastName
+                }
+                holder.username.text = users
+            }
+            override fun fail(error: Exception) {
+            }
+        })
 
         holder.itemView.setOnClickListener {
             onClickListener.onItemClick(position)
         }
 
-        holder.payment.text = values[position].payment
+        holder.payment.text = values[position].payment.toString() + " руб."
         holder.checkBox.isChecked = values[position].isPaid
     }
 

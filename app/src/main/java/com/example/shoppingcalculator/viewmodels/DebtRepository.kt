@@ -1,17 +1,21 @@
 package com.example.shoppingcalculator.viewmodels
 
+import androidx.lifecycle.MutableLiveData
+import com.example.shoppingcalculator.Event
+import com.example.shoppingcalculator.PaymentUser
+import com.example.shoppingcalculator.firebaseDB.FirebaseDB
+
 class DebtRepository {
     companion object {
         var instance = DebtRepository()
     }
 
-    //var mFirebaseDB = FirebaseDB()
+    var firebaseDB = FirebaseDB()
 
-    /*fun getGroupFromDB(callBack: (MutableList<User?>) -> Unit) {
-        //TODO somehow retrieve data from DB
-        val current = CurrentGroup.instance
-        if (current.groupName.isNotEmpty()) {
-            mFirebaseDB.getUsersFromGroup(current.groupName, callBack)
-        }
-    }*/
+    var paymentUsers: MutableLiveData<List<PaymentUser>> = MutableLiveData()
+
+    fun getPaymentUsers(eventName:String, callBack: (MutableList<PaymentUser>) -> Unit) {
+
+        firebaseDB.getPaymentUsers(eventName, callBack)
+    }
 }

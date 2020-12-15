@@ -37,7 +37,7 @@ class MainRecyclerAdapter(var values: ArrayList<Event>, var onClickListener: OnC
             i++
         }
 
-        //holder.date.text = values[position].date
+        holder.date.text = values[position].date
         VK.execute(VKUsersRequest(array), object: VKApiCallback<List<VKUser>> {
             override fun success(result: List<VKUser>) {
                 var users: String = ""

@@ -7,6 +7,6 @@ import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
 @Parcelize
-class Event(var name:String, var code:String, var expenses: ArrayList<Expense>, var users:HashMap<String, String>): Parcelable {
-    constructor() : this("", "", ArrayList(), HashMap())
+class Event(var name:String, var code:String, var date: String, var expenses: ArrayList<Expense>, var users:HashMap<String, String>): Parcelable {
+    constructor() : this("", "", "", ArrayList(), HashMap())
 }
