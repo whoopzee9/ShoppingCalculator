@@ -28,17 +28,19 @@
 
 ![](images/Modeling_use.png)
 
-_Диаграмма UML - Моделирование использования_
-````
+**_Диаграмма UML - Моделирование использования_**
+
+#
+
 # Проектирование и разработка архитектуры
 
 ![](images/System_Context_diagram.png)
 
-_System Context diagram_
+**_System Context diagram_**
 
 ![](images/Container_diagram.png)
 
-_Container diagram_
+**_Container diagram_**
 
 # Кодирование и отладка
 
@@ -46,9 +48,9 @@ _Container diagram_
 
 Установочные файлы apk располагаются по следующему пути:
 
-_ShoppingCalculator\apk\payShare.apk_
+_`ShoppingCalculator\apk\payShare.apk`_
 
-_ShoppingCalculator\app\release\app-release.apk_
+_`ShoppingCalculator\app\release\app-release.apk`_
 
 # Тестирование
 
@@ -58,6 +60,6 @@ _ShoppingCalculator\app\release\app-release.apk_
 
 Сборка и запуск происходят при помощи следующих скриптов, которые заменяют gradle:
 
-1. _gradlew app:android_
-2. _gradlew app:build_
-3. _gradlew app:test_
+1. _`gradlew app:android`_
+2. _`gradlew app:build`_
+3. _`gradlew app:test`_
