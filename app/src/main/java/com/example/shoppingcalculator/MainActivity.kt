@@ -151,7 +151,19 @@ class MainActivity : AppCompatActivity() {
         ETTime.setOnClickListener {
             val c = Calendar.getInstance()
             val time = TimePickerDialog(this, TimePickerDialog.OnTimeSetListener { view, hourOfDay, minute ->
-                ETTime.setText("$hourOfDay:$minute")
+                val hour: String
+                var minuteStr: String
+                hour = if (hourOfDay < 10) {
+                    "0$hourOfDay"
+                } else {
+                    hourOfDay.toString()
+                }
+                minuteStr = if (minute < 10) {
+                    "0$minute"
+                } else {
+                    minute.toString()
+                }
+                ETTime.setText("$hour:$minuteStr")
             }, c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE), true)
             time.show()
         }
