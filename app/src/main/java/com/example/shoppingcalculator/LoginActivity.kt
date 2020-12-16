@@ -22,9 +22,6 @@ class LoginActivity: AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
-        etLogin = findViewById(R.id.et_login)
-        etPassword = findViewById(R.id.et_password)
-
         var fing = VKUtils.getCertificateFingerprint(this, this.packageName)
         if (fing != null) {
             for (item in fing) {
@@ -35,16 +32,12 @@ class LoginActivity: AppCompatActivity() {
             println(VK.getUserId())
             val intent = Intent(applicationContext, MainActivity::class.java)
 
-            //intent.putExtra("token", token.accessToken)
-            intent.putExtra("username", etLogin!!.text.toString().trim())
             startActivity(intent)
             finish()
         }
     }
 
-    fun onRegisterClick(view: View) {
 
-    }
 
     fun onLoginClick(view: View) {
         startMainActivityAndClose("")
@@ -60,7 +53,6 @@ class LoginActivity: AppCompatActivity() {
                 val intent = Intent(applicationContext, MainActivity::class.java)
 
                 intent.putExtra("token", token.accessToken)
-                intent.putExtra("username", etLogin!!.text.toString().trim())
                 startActivity(intent)
                 finish()
             }
@@ -82,7 +74,6 @@ class LoginActivity: AppCompatActivity() {
         val intent = Intent(this, MainActivity::class.java)
 
         intent.putExtra("token", result)
-        intent.putExtra("username", etLogin!!.text.toString().trim())
         startActivity(intent)
         finish()
     }
