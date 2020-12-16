@@ -102,6 +102,7 @@ class ExpensesActivity: AppCompatActivity() {
             progressBar.visibility = View.GONE
         })
         viewModel.updateUsers(currEvent, currExpense.name)
+        debtViewModel.updatePaymentUsers(currEvent)
     }
 
     fun onAddSharingClick(view: View) {

@@ -31,7 +31,9 @@ class DebtActivity: AppCompatActivity() {
         //var values = ArrayList<PaymentUser>()
         //values.add(PaymentUser("Alex", 40.0, false))
 
+        println("CURR EVENT $currEvent")
         firebaseDB.getPaymentUsers(currEvent) {
+
             firebaseDB.listenPaymentUsersChange(currEvent, it) {
                 viewModel.listenChange(currEvent)
             }

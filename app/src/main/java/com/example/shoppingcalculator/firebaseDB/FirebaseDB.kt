@@ -87,8 +87,8 @@ class FirebaseDB : ExtensionsCRUD {
                             events.add(retrieveEvent)
                         }
                     }
-                    callBack(events)
                 }
+                callBack(events)
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -137,8 +137,8 @@ class FirebaseDB : ExtensionsCRUD {
                             expenses.add(retrieveExpense)
                         }
                     }
-                    callBack(expenses)
                 }
+                callBack(expenses)
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -176,8 +176,8 @@ class FirebaseDB : ExtensionsCRUD {
                             users.add(item.value.toString())
                         }
                     }
-                    callBack(users)
                 }
+                callBack(users)
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -231,8 +231,8 @@ class FirebaseDB : ExtensionsCRUD {
                             users.add(retrieve)
                         }
                     }
-                    callBack(users)
                 }
+                callBack(users)
             }
 
             override fun onCancelled(error: DatabaseError) {
