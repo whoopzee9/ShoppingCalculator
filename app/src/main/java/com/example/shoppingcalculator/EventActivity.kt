@@ -91,6 +91,7 @@ import kotlin.collections.ArrayList
             progressBar.visibility = View.GONE
         })
         viewModel.updateExpenses(currEvent)
+        progressBar.visibility = View.GONE
 
     }
 

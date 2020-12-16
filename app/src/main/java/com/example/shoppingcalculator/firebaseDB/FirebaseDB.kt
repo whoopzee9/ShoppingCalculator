@@ -25,10 +25,15 @@ class FirebaseDB : ExtensionsCRUD {
     //Auth
     //private var mAuth = FirebaseAuth.getInstance()
 
-    private lateinit var eventMessageListener: ValueEventListener
-    private lateinit var expenseMessageListener: ValueEventListener
-    private lateinit var sharingUserMessageListener: ValueEventListener
-    private lateinit var paymentUserMessageListener: ValueEventListener
+    //private lateinit var eventMessageListener: ValueEventListener
+    //private lateinit var expenseMessageListener: ValueEventListener
+    //private lateinit var sharingUserMessageListener: ValueEventListener
+    //private lateinit var paymentUserMessageListener: ValueEventListener
+
+    private val eventInstance = EventListener.instance
+    private val expenseInstance = ExpenseListener.instance
+    private val sharingUserInstance = SharingUserListener.instance
+    private val paymentUserInstance = PaymentUserListener.instance
 
     //Authenticated user
     //var user = mAuth.currentUser
@@ -44,7 +49,7 @@ class FirebaseDB : ExtensionsCRUD {
 
             eventsRef.child(eventName).setValue(Event(eventName, secretCode, Calendar.getInstance().toString(), expenses, users))
             usersRef.child(VK.getUserId().toString()).child("events").child(eventName).setValue(eventName)
-            usersRef.child(VK.getUserId().toString()).child("events").child(eventName).addValueEventListener(eventMessageListener)
+            usersRef.child(VK.getUserId().toString()).child("events").child(eventName).addValueEventListener(eventInstance.messageListener)
         }
     }
 
@@ -88,7 +93,7 @@ class FirebaseDB : ExtensionsCRUD {
         val users = HashMap<String, String>()
         users.put(VK.getUserId().toString(), VK.getUserId().toString())
         eventsRef.child(eventName).child("expences").child(expenseName).setValue(Expense(expenseName, "desc", false, VK.getUserId(), Date(System.currentTimeMillis()).toString(), price, users))
-        eventsRef.child(eventName).child("expences").child(expenseName).addValueEventListener(expenseMessageListener)
+        eventsRef.child(eventName).child("expences").child(expenseName).addValueEventListener(expenseInstance.messageListener)
     }
 
     override fun joinExpense(eventName: String, expenseName: String) {
@@ -99,7 +104,7 @@ class FirebaseDB : ExtensionsCRUD {
 
     override fun exitExpense(eventName: String, expenseName: String) {
         if (eventName.isNotEmpty() && expenseName.isNotEmpty()) {
-            //eventsRef.child(eventName).child("expences").child(expenseName).child("users").child(VK.getUserId().toString()).removeEventListener(expenseMessageListener)
+            eventsRef.child(eventName).child("expences").child(expenseName).child("users").child(VK.getUserId().toString()).removeEventListener(expenseInstance.messageListener)
             eventsRef.child(eventName).child("expences").child(expenseName).child("users").child(VK.getUserId().toString()).removeValue()
         }
     }
@@ -224,7 +229,7 @@ class FirebaseDB : ExtensionsCRUD {
     override fun setPaymentUsers(eventName: String, users: ArrayList<PaymentUser>) {
         for (item in users) {
             usersRef.child(VK.getUserId().toString()).child("events").child(eventName).child("users").child(item.id.toString()).setValue(item)
-            usersRef.child(VK.getUserId().toString()).child("events").child(eventName).child("users").child(item.id.toString()).addValueEventListener(paymentUserMessageListener)
+            usersRef.child(VK.getUserId().toString()).child("events").child(eventName).child("users").child(item.id.toString()).addValueEventListener(paymentUserInstance.messageListener)
         }
     }
 
@@ -233,21 +238,23 @@ class FirebaseDB : ExtensionsCRUD {
     }
 
     override fun listenEventChange(expenses: MutableList<Event>, callBack: (Event?) -> Unit) {
-        paymentUserMessageListener = object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    //println("DATA CHAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAANGE")
-                    val message = dataSnapshot.getValue(PaymentUser::class.java)
-                    if (message != null) {
-                        //callBack(message)
+        if (!paymentUserInstance.isInitialized()) {
+            paymentUserInstance.messageListener = object : ValueEventListener {
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    if (dataSnapshot.exists()) {
+                        println("FALSE INIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIT")
+                        val message = dataSnapshot.getValue(PaymentUser::class.java)
+                        if (message != null) {
+                            //callBack(message)
+                        }
                     }
                 }
-            }
 
-            override fun onCancelled(databaseError: DatabaseError) {
+                override fun onCancelled(databaseError: DatabaseError) {
+                }
             }
         }
-        eventMessageListener = object : ValueEventListener {
+        eventInstance.messageListener = object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 if (dataSnapshot.exists()) {
                     val message = dataSnapshot.getValue(Event::class.java)
@@ -269,7 +276,7 @@ class FirebaseDB : ExtensionsCRUD {
         var listExpenses = expenses
         for (item in listExpenses) {
             if (item != null) {
-                eventsRef.child(item.name).addValueEventListener(eventMessageListener)
+                eventsRef.child(item.name).addValueEventListener(eventInstance.messageListener)
             }
         }
     }
@@ -279,22 +286,24 @@ class FirebaseDB : ExtensionsCRUD {
     }
 
     override fun listenExpenseChange(eventName: String, expenses: MutableList<Expense>, callBack: (Expense) -> Unit) {
-        paymentUserMessageListener = object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    //println("DATA CHAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAANGE")
-                    val message = dataSnapshot.getValue(PaymentUser::class.java)
-                    if (message != null) {
-                        //callBack(message)
+        if (!paymentUserInstance.isInitialized()) {
+            paymentUserInstance.messageListener = object : ValueEventListener {
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    if (dataSnapshot.exists()) {
+                        println("FALSE INIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIT")
+                        val message = dataSnapshot.getValue(PaymentUser::class.java)
+                        if (message != null) {
+                            //callBack(message)
+                        }
                     }
                 }
-            }
 
-            override fun onCancelled(databaseError: DatabaseError) {
+                override fun onCancelled(databaseError: DatabaseError) {
+                }
             }
         }
 
-        expenseMessageListener = object : ValueEventListener {
+        expenseInstance.messageListener = object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 if (dataSnapshot.exists()) {
                     val message = dataSnapshot.getValue(Expense::class.java)
@@ -316,7 +325,7 @@ class FirebaseDB : ExtensionsCRUD {
         var listExpenses = expenses
         for (item in listExpenses) {
             if (item != null) {
-                eventsRef.child(eventName).child("expences").child(item.name).addValueEventListener(expenseMessageListener)
+                eventsRef.child(eventName).child("expences").child(item.name).addValueEventListener(expenseInstance.messageListener)
             }
         }
     }
@@ -331,24 +340,26 @@ class FirebaseDB : ExtensionsCRUD {
         users: MutableList<String>,
         callBack: (String) -> Unit
     ) {
-        paymentUserMessageListener = object : ValueEventListener {
+        if (!paymentUserInstance.isInitialized()) {
+            paymentUserInstance.messageListener = object : ValueEventListener {
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    if (dataSnapshot.exists()) {
+                        println("FALSE INIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIT")
+                        val message = dataSnapshot.getValue(PaymentUser::class.java)
+                        if (message != null) {
+                            //callBack(message)
+                        }
+                    }
+                }
+
+                override fun onCancelled(databaseError: DatabaseError) {
+                }
+            }
+        }
+        sharingUserInstance.messageListener = object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 if (dataSnapshot.exists()) {
                     //println("DATA CHAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAANGE")
-                    val message = dataSnapshot.getValue(PaymentUser::class.java)
-                    if (message != null) {
-                        //callBack(message)
-                    }
-                }
-            }
-
-            override fun onCancelled(databaseError: DatabaseError) {
-            }
-        }
-        sharingUserMessageListener = object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    println("DATA CHAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAANGE")
                     val message = dataSnapshot.getValue(String::class.java)
                     if (message != null) {
                         callBack(message)
@@ -372,7 +383,7 @@ class FirebaseDB : ExtensionsCRUD {
                     .child("expences")
                     .child(expenseName)
                     .child("users")
-                    .child(item).addValueEventListener(sharingUserMessageListener)
+                    .child(item).addValueEventListener(sharingUserInstance.messageListener)
             }
         }
     }
@@ -386,10 +397,10 @@ class FirebaseDB : ExtensionsCRUD {
         users: MutableList<PaymentUser>,
         callBack: (PaymentUser) -> Unit
     ) {
-        paymentUserMessageListener = object : ValueEventListener {
+        paymentUserInstance.messageListener = object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    //println("DATA CHAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAANGE")
+                    println("TRUE INIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIT")
                     val message = dataSnapshot.getValue(PaymentUser::class.java)
                     if (message != null) {
                         callBack(message)
@@ -411,7 +422,7 @@ class FirebaseDB : ExtensionsCRUD {
                     .child("events")
                     .child(eventName)
                     .child("users")
-                    .child(item.id.toString()).addValueEventListener(paymentUserMessageListener)
+                    .child(item.id.toString()).addValueEventListener(paymentUserInstance.messageListener)
             }
         }
     }
