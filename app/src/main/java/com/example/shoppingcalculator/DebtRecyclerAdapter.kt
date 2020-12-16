@@ -11,6 +11,7 @@ import com.vk.api.sdk.VKApiCallback
 class DebtRecyclerAdapter(var values: ArrayList<PaymentUser>, var onClickListener: OnClickListener): RecyclerView.Adapter<DebtRecyclerViewHolder>() {
     interface OnClickListener {
         fun onItemClick(position: Int)
+        fun onCheckBoxClick(position: Int, isChecked: Boolean)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DebtRecyclerViewHolder {
@@ -43,6 +44,10 @@ class DebtRecyclerAdapter(var values: ArrayList<PaymentUser>, var onClickListene
 
         holder.payment.text = values[position].payment.toString() + " руб."
         holder.checkBox.isChecked = values[position].isPaid
+
+        holder.checkBox.setOnClickListener {
+            onClickListener.onCheckBoxClick(position, holder.checkBox.isChecked)
+        }
     }
 
 }

@@ -248,6 +248,12 @@ class FirebaseDB : ExtensionsCRUD {
         }
     }
 
+    override fun changePaymentUserPaid(eventName: String, userId: String, isPaid: Boolean) {
+        if (eventName.isNotEmpty() && userId.isNotEmpty()) {
+            usersRef.child(VK.getUserId().toString()).child("events").child(eventName).child("users").child(userId).child("paid").setValue(isPaid)
+        }
+    }
+
     override fun getUsers(callBack: (MutableList<User?>) -> Unit) {
         TODO("Not yet implemented")
     }

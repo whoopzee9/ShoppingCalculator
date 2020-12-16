@@ -28,6 +28,7 @@ interface ExtensionsCRUD {
 
     fun getPaymentUsers(eventName: String, callBack: (MutableList<PaymentUser>) -> Unit)
     fun setPaymentUsers(eventName: String, users: ArrayList<PaymentUser>)
+    fun changePaymentUserPaid(eventName: String, userId: String, isPaid: Boolean)
 
     fun listenEventChange(expenses: MutableList<Event>, callBack: ((Event?) -> Unit))
     fun detachListEvents(listEvents: ArrayList<Event?>)

@@ -64,7 +64,9 @@ import kotlin.collections.ArrayList
         debtViewModel.getUsers().observe(this, androidx.lifecycle.Observer {
             var total = 0.0
             for (item in it) {
-                total += item.payment
+                if (!item.isPaid) {
+                    total += item.payment
+                }
             }
             currDebt.text = "Общая сумма: $total руб."
         })

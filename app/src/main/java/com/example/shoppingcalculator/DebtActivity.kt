@@ -17,6 +17,7 @@ class DebtActivity: AppCompatActivity() {
     lateinit var viewModel: DebtViewModel
     lateinit var currEvent: String
     var firebaseDB = FirebaseDB()
+    private lateinit var adapter: DebtRecyclerAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,14 +40,16 @@ class DebtActivity: AppCompatActivity() {
             }
         }
 
-        val adapter = DebtRecyclerAdapter(values, object: DebtRecyclerAdapter.OnClickListener {
+        adapter = DebtRecyclerAdapter(values, object: DebtRecyclerAdapter.OnClickListener {
             override fun onItemClick(position: Int) {
                 //val intent = Intent(applicationContext, ExpensesActivity::class.java)
-
-
                 //startActivity(intent)
             }
 
+            override fun onCheckBoxClick(position: Int, isChecked: Boolean) {
+                println("Checked!")
+                firebaseDB.changePaymentUserPaid(currEvent, adapter.values[position].id.toString(), isChecked)
+            }
         })
         rvDebtList.adapter = adapter
         rvDebtList.layoutManager = LinearLayoutManager(this)
