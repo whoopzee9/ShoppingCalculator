@@ -4,33 +4,25 @@ import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.DialogInterface
 import android.content.Intent
-import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.EditText
 import android.widget.ProgressBar
 import androidx.appcompat.app.AlertDialog
-import androidx.core.view.get
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.shoppingcalculator.VKAPI.VKUser
 import com.example.shoppingcalculator.VKAPI.VKUsersRequest
+import com.example.shoppingcalculator.firebaseDB.FirebaseDB
+import com.example.shoppingcalculator.viewmodels.EventViewModel
+import com.vk.api.sdk.VK
+import com.vk.api.sdk.VKApiCallback
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
-import com.example.shoppingcalculator.firebaseDB.FirebaseDB
-import com.example.shoppingcalculator.viewmodels.EventViewModel
-import com.example.shoppingcalculator.viewmodels.ExpensesViewModel
-import com.vk.api.sdk.VK
-import com.vk.api.sdk.VKApiCallback
-import com.vk.api.sdk.VKApiConfig
-import com.vk.api.sdk.exceptions.VKApiExecutionException
-import java.time.LocalDate
-import javax.xml.datatype.DatatypeConstants.MONTHS
-import kotlin.collections.HashMap
 
 class MainActivity : AppCompatActivity() {
     private lateinit var rvEvents: RecyclerView
@@ -183,19 +175,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun getFormattedTime(hour: Int, minute: Int): String {
-        val hourStr: String = if (hour < 10) {
-            "0$hour"
-        } else {
-            hour.toString()
-        }
-        var minuteStr: String = if (minute < 10) {
-            "0$minute"
-        } else {
-            minute.toString()
-        }
-        return "$hourStr:$minuteStr"
-    }
+
 
     fun onJoinEventClick(view: View) {
         val placeFormView = LayoutInflater.from(this).inflate(R.layout.event_dialog_layout, null)
