@@ -95,7 +95,7 @@ class ExpensesActivity: AppCompatActivity() {
         rvUsers.adapter = adapter
         rvUsers.layoutManager = LinearLayoutManager(this)
 
-        viewModel.getSharingUsers().observe(this, androidx.lifecycle.Observer {
+        viewModel.getSharingUsers().observe(this, Observer {
             adapter.values = it as ArrayList<String>
             adapter.notifyDataSetChanged()
             val progressBar: ProgressBar = findViewById(R.id.progressBarExpenses)
