@@ -6,7 +6,11 @@ import com.example.shoppingcalculator.firebaseDB.FirebaseDB
 
 class SharingRepository {
     companion object {
-        var instance = SharingRepository()
+        val instance : SharingRepository by lazy { holder.Instance }
+    }
+
+    private object holder {
+        val Instance = SharingRepository()
     }
 
     var firebaseDB = FirebaseDB()

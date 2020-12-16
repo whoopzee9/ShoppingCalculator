@@ -7,7 +7,11 @@ import com.example.shoppingcalculator.firebaseDB.FirebaseDB
 
 class EventRepository {
     companion object {
-        var instance = EventRepository()
+        val instance : EventRepository by lazy { holder.Instance }
+    }
+
+    private object holder {
+        val Instance = EventRepository()
     }
     var event: MutableLiveData<List<Event>> = MutableLiveData()
 

@@ -52,6 +52,15 @@ import kotlin.collections.ArrayList
         viewModel = ViewModelProviders.of(this).get(ExpensesViewModel::class.java)
 
         debtViewModel = ViewModelProviders.of(this).get(DebtViewModel::class.java)
+
+        firebaseDB.getPaymentUsers(currEvent) {
+
+            firebaseDB.listenPaymentUsersChange(currEvent, it) {
+                debtViewModel.listenChange(currEvent)
+            }
+        }
+
+        debtViewModel.updatePaymentUsers(currEvent)
         debtViewModel.getUsers().observe(this, androidx.lifecycle.Observer {
             var total = 0.0
             for (item in it) {
@@ -59,7 +68,6 @@ import kotlin.collections.ArrayList
             }
             currDebt.text = "Общая сумма: $total руб."
         })
-        debtViewModel.updatePaymentUsers(currEvent)
 
         firebaseDB.getExpenses(currEvent) {
             firebaseDB.listenExpenseChange(currEvent, it) {
@@ -99,6 +107,7 @@ import kotlin.collections.ArrayList
          super.onResume()
 
          viewModel.updateExpenses(currEvent)
+         debtViewModel.updatePaymentUsers(currEvent)
      }
 
      fun onTotalDebtClick(view: View) {

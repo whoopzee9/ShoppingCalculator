@@ -6,7 +6,11 @@ import com.example.shoppingcalculator.firebaseDB.FirebaseDB
 
 class ExpensesRepository {
     companion object {
-        var instance = ExpensesRepository()
+        val instance : ExpensesRepository by lazy { holder.Instance }
+    }
+
+    private object holder {
+        val Instance = ExpensesRepository()
     }
 
     var expenses: MutableLiveData<List<Expense>> = MutableLiveData()
