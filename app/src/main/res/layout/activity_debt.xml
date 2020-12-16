@@ -10,7 +10,7 @@
         android:id="@+id/tv_debt_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Вам нужно оплатить"
+        android:text="Вам нужно заплатить"
         android:textAlignment="center"
         android:textSize="30sp"
         android:textStyle="bold"

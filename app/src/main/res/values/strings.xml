@@ -6,5 +6,9 @@
     <string name="btn_register">Регистрация</string>
     <string name="login_via_vk">Войти через Вконтакте</string>
     <string name="payshare">PayShare</string>
+    <string name="expense_name">Название</string>
+    <string name="sum_str">Cтоимость</string>
+    <string name="payment_str">Платеж</string>
+    <string name="name_str">Имя</string>
     <integer name="com_vk_sdk_AppId">7668042</integer>
 </resources>
