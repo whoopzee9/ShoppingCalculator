@@ -14,7 +14,7 @@
         android:layout_height="56dp"
         android:layout_marginBottom="84dp"
         android:background="@drawable/rounded_button_vk"
-        android:drawableLeft="@drawable/vk_white"
+        android:drawableStart="@drawable/vk_white"
         android:fontFamily="sans-serif-medium"
         android:onClick="onLoginViaVKClick"
         android:text="@string/login_via_vk"
@@ -27,81 +27,6 @@
         app:layout_constraintHorizontal_bias="0.491"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <Button
-        android:id="@+id/btn_register"
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="24dp"
-        android:layout_marginBottom="172dp"
-        android:background="@drawable/rounded_button"
-        android:onClick="onRegisterClick"
-        android:text="@string/btn_register"
-        android:textColor="@android:color/white"
-        android:textColorHint="@android:color/white"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        tools:visibility="gone" />
-
-    <Button
-        android:id="@+id/btn_login"
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginBottom="172dp"
-        android:background="@drawable/rounded_button"
-        android:onClick="onLoginClick"
-        android:text="@string/btn_signin"
-        android:textColor="@android:color/white"
-        android:textColorHint="@android:color/white"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/btn_register"
-        app:layout_constraintHorizontal_bias="0.194"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:visibility="gone" />
-
-    <EditText
-        android:id="@+id/et_login"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="64dp"
-        android:layout_marginTop="312dp"
-        android:layout_marginEnd="64dp"
-        android:backgroundTint="@color/colorPrimaryDark"
-        android:ems="10"
-        android:fontFamily="sans-serif"
-        android:hint="@string/text_login"
-        android:textAlignment="center"
-        android:textColor="@color/colorPrimaryDark"
-        android:textColorHint="@color/colorPrimaryDark"
-        android:textSize="24sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:visibility="gone" />
-
-    <EditText
-        android:id="@+id/et_password"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="64dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="64dp"
-        android:backgroundTint="@color/colorPrimaryDark"
-        android:ems="10"
-        android:hint="@string/text_password"
-        android:inputType="textPassword"
-        android:textAlignment="center"
-        android:textColor="@color/colorPrimaryDark"
-        android:textColorHint="@color/colorPrimaryDark"
-        android:textSize="24sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/et_login"
-        tools:visibility="gone" />
 
     <ProgressBar
         android:id="@+id/progressBar"
@@ -120,6 +45,7 @@
         app:layout_constraintVertical_bias="0.499" />
 
     <ImageView
+        android:id="@+id/imageView"
         android:layout_width="351dp"
         android:layout_height="360dp"
         android:layout_marginStart="78dp"
@@ -129,6 +55,17 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/payshare"
+        android:textSize="36sp"
+        app:layout_constraintBottom_toTopOf="@+id/btn_login_via_vk"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
