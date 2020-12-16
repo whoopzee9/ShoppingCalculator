@@ -1,5 +1,7 @@
 package com.example.shoppingcalculator
 
+import android.app.DatePickerDialog
+import android.app.TimePickerDialog
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Build
@@ -27,6 +29,7 @@ import com.vk.api.sdk.VKApiCallback
 import com.vk.api.sdk.VKApiConfig
 import com.vk.api.sdk.exceptions.VKApiExecutionException
 import java.time.LocalDate
+import javax.xml.datatype.DatatypeConstants.MONTHS
 import kotlin.collections.HashMap
 
 class MainActivity : AppCompatActivity() {
@@ -127,6 +130,32 @@ class MainActivity : AppCompatActivity() {
     fun onAddEventClick(view: View) {
         val placeFormView = LayoutInflater.from(this).inflate(R.layout.event_adding_layout, null)
         placeFormView.findViewById<EditText>(R.id.et_EventKey).hint = "Название"
+        val ETDate = placeFormView.findViewById<EditText>(R.id.et_Date)
+        val ETTime = placeFormView.findViewById<EditText>(R.id.et_Time)
+
+        ETDate.setOnClickListener {
+            val c = Calendar.getInstance()
+            val year = c.get(Calendar.YEAR)
+            val month = c.get(Calendar.MONTH)
+            val day = c.get(Calendar.DAY_OF_MONTH)
+            val dpd = DatePickerDialog(this, DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
+
+                // Display Selected date in textbox
+                ETDate.setText("$dayOfMonth.$monthOfYear.$year")
+
+            }, year, month, day)
+
+            dpd.show()
+        }
+
+        ETTime.setOnClickListener {
+            val c = Calendar.getInstance()
+            val time = TimePickerDialog(this, TimePickerDialog.OnTimeSetListener { view, hourOfDay, minute ->
+                ETTime.setText("$hourOfDay:$minute")
+            }, c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE), true)
+            time.show()
+        }
+        
         val dialog = AlertDialog.Builder(this)
             .setTitle("Добавить новое событие")
             .setView(placeFormView)
@@ -136,6 +165,7 @@ class MainActivity : AppCompatActivity() {
 
         dialog.getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener {
             val name = placeFormView.findViewById<EditText>(R.id.et_EventKey).text.trim()
+            val dateTime: String = ETDate.text.toString() + " " + ETTime.text.toString()
             if (name.isBlank()) {
                 placeFormView.findViewById<EditText>(R.id.et_EventKey).hint = "Введите название"
             } else {
@@ -146,7 +176,7 @@ class MainActivity : AppCompatActivity() {
                     key = "$key$number"
                     i += 1
                 }
-                firebaseDB.createEvent(name.toString(), key)
+                firebaseDB.createEvent(name.toString(), dateTime, key)
                 dialog.dismiss()
                 viewModel.updateEvents()
             }

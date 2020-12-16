@@ -8,7 +8,7 @@ import java.util.function.BooleanSupplier
 
 interface ExtensionsCRUD {
 
-    fun createEvent(eventName: String, secretCode: String)
+    fun createEvent(eventName: String, date:String, secretCode: String)
     fun deleteEvent(eventName: String)
     fun joinEvent(code: String)
     fun getEvents(callBack: (MutableList<Event>) -> Unit)

@@ -22,19 +22,21 @@
         android:id="@+id/et_Date"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="Дата"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
-        android:inputType="date" />
+        android:ems="10"
+        android:focusable="false"
+        android:hint="Дата"
+        android:inputType="none" />
 
     <EditText
         android:id="@+id/et_Time"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="Время"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
-        android:inputType="time" />
+        android:ems="10"
+        android:focusable="false"
+        android:hint="Время"
+        android:inputType="none" />
 </LinearLayout>

@@ -41,13 +41,13 @@ class FirebaseDB : ExtensionsCRUD {
         //eventsRef.child("event").child("expense1").
     }
 
-    override fun createEvent(eventName: String, secretCode: String) {
+    override fun createEvent(eventName: String, date:String, secretCode: String) {
         if (eventName.isNotEmpty()) {
             val users = HashMap<String, String>()
             users.put(VK.getUserId().toString(), VK.getUserId().toString())
             val expenses = ArrayList<Expense>()
 
-            eventsRef.child(eventName).setValue(Event(eventName, secretCode, Calendar.getInstance().toString(), expenses, users))
+            eventsRef.child(eventName).setValue(Event(eventName, secretCode, date, expenses, users))
             usersRef.child(VK.getUserId().toString()).child("events").child(eventName).setValue(eventName)
             usersRef.child(eventName).addValueEventListener(eventInstance.messageListener)
         }
