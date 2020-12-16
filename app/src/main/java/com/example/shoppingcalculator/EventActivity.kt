@@ -62,12 +62,7 @@ import kotlin.collections.ArrayList
 
         debtViewModel.updatePaymentUsers(currEvent)
         debtViewModel.getUsers().observe(this, androidx.lifecycle.Observer {
-            var total = 0.0
-            for (item in it) {
-                if (!item.isPaid) {
-                    total += item.payment
-                }
-            }
+            var total = debtCounting(it)
             currDebt.text = "Общая сумма: $total руб."
         })
 
@@ -110,6 +105,16 @@ import kotlin.collections.ArrayList
 
          viewModel.updateExpenses(currEvent)
          debtViewModel.updatePaymentUsers(currEvent)
+     }
+
+     fun debtCounting(users: List<PaymentUser>): Double {
+         var total = 0.0
+         for (item in users) {
+             if (!item.isPaid) {
+                 total += item.payment
+             }
+         }
+         return total
      }
 
      fun onTotalDebtClick(view: View) {

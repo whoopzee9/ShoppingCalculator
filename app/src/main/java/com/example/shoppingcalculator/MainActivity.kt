@@ -151,19 +151,7 @@ class MainActivity : AppCompatActivity() {
         ETTime.setOnClickListener {
             val c = Calendar.getInstance()
             val time = TimePickerDialog(this, TimePickerDialog.OnTimeSetListener { view, hourOfDay, minute ->
-                val hour: String
-                var minuteStr: String
-                hour = if (hourOfDay < 10) {
-                    "0$hourOfDay"
-                } else {
-                    hourOfDay.toString()
-                }
-                minuteStr = if (minute < 10) {
-                    "0$minute"
-                } else {
-                    minute.toString()
-                }
-                ETTime.setText("$hour:$minuteStr")
+                ETTime.setText(getFormattedTime(hourOfDay, minute))
             }, c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE), true)
             time.show()
         }
@@ -193,6 +181,20 @@ class MainActivity : AppCompatActivity() {
                 viewModel.updateEvents()
             }
         }
+    }
+
+    fun getFormattedTime(hour: Int, minute: Int): String {
+        val hourStr: String = if (hour < 10) {
+            "0$hour"
+        } else {
+            hour.toString()
+        }
+        var minuteStr: String = if (minute < 10) {
+            "0$minute"
+        } else {
+            minute.toString()
+        }
+        return "$hourStr:$minuteStr"
     }
 
     fun onJoinEventClick(view: View) {
