@@ -22,7 +22,7 @@ class SharingViewModel: ViewModel() {
     fun updateUsers(eventName: String, expenseName: String) {
         //println("before updating group")
         repository.getSharingUsers(eventName, expenseName) {
-            println("--------------------------------------------------------------------------------------------------------------------------------")
+            println("updating sharing users")
             repository.users.postValue(it)
 
         }

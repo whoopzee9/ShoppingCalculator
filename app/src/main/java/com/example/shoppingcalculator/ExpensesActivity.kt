@@ -122,10 +122,20 @@ class ExpensesActivity: AppCompatActivity() {
     fun onRemoveSharingClick(view: View) {
         val progressBar: ProgressBar = findViewById(R.id.progressBarExpenses)
         progressBar.visibility = View.VISIBLE
-        firebaseDB.exitExpense(currEvent, currExpense.name)
+        val dialog = AlertDialog.Builder(this)
+            .setTitle("Выход")
+            .setMessage("Вы действительно хотите прекратить принимать участие?")
+            .setNegativeButton("Отмена", null)
+            .setPositiveButton("Выход", null)
+            .show()
 
-        viewModel.updateUsers(currEvent, currExpense.name)
-        debtViewModel.updatePaymentUsers(currEvent)
+        dialog.getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener {
+            firebaseDB.exitExpense(currEvent, currExpense.name)
+
+            viewModel.updateUsers(currEvent, currExpense.name)
+            debtViewModel.updatePaymentUsers(currEvent)
+            dialog.dismiss()
+        }
     }
 
     fun onEditExpenseClick(view: View) {
@@ -134,7 +144,7 @@ class ExpensesActivity: AppCompatActivity() {
         val etCost: EditText = placeFormView.findViewById(R.id.et_expense_cost)
         val etName: EditText = placeFormView.findViewById(R.id.et_expense_name)
 
-        etCost.setText(cost.text)
+        //etCost.setText(cost.text)
         etName.setText(name.text)
 
         val dialog = AlertDialog.Builder(this)
@@ -149,10 +159,36 @@ class ExpensesActivity: AppCompatActivity() {
             try {
                 price = etCost.text.toString().toDouble()
             } catch (e: NumberFormatException) {
+                val dialog2 = AlertDialog.Builder(this)
+                    .setTitle("Ошибка!")
+                    .setMessage("Неправильная стоимость!")
+                    .setNeutralButton("Ок", null)
+                    .show()
                 dialog.dismiss()
                 return@setOnClickListener
             }
             firebaseDB.changeExpensePrice(currEvent, currExpense.name, price)
+            cost.text = "Стоимость: " + price.toString() + " руб."
+            dialog.dismiss()
+        }
+    }
+
+    fun onDeleteShareClick(view: View) {
+        val dialog = AlertDialog.Builder(this)
+            .setTitle("Удаление")
+            .setMessage("Вы действительно хотите удалить данный продукт?")
+            .setNegativeButton("Отмена", null)
+            .setPositiveButton("Удалить", null)
+            .show()
+
+        dialog.getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener {
+            firebaseDB.deleteExpense(currEvent, currExpense.name)
+            debtViewModel.updatePaymentUsers(currEvent)
+
+            //viewModel.updateUsers(currEvent, currExpense.name)
+            finish()
+
+
             dialog.dismiss()
         }
     }

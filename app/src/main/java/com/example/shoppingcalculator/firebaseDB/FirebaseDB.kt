@@ -49,7 +49,15 @@ class FirebaseDB : ExtensionsCRUD {
 
             eventsRef.child(eventName).setValue(Event(eventName, secretCode, Calendar.getInstance().toString(), expenses, users))
             usersRef.child(VK.getUserId().toString()).child("events").child(eventName).setValue(eventName)
-            usersRef.child(VK.getUserId().toString()).child("events").child(eventName).addValueEventListener(eventInstance.messageListener)
+            usersRef.child(eventName).addValueEventListener(eventInstance.messageListener)
+        }
+    }
+
+    override fun deleteEvent(eventName: String) {
+        if (eventName.isNotEmpty()) {
+            eventsRef.child(eventName).removeEventListener(eventInstance.messageListener)
+            eventsRef.child(eventName).removeValue()
+            usersRef.child(VK.getUserId().toString()).child("events").child(eventName).removeValue()
         }
     }
 
@@ -94,6 +102,13 @@ class FirebaseDB : ExtensionsCRUD {
         users.put(VK.getUserId().toString(), VK.getUserId().toString())
         eventsRef.child(eventName).child("expences").child(expenseName).setValue(Expense(expenseName, "desc", false, VK.getUserId(), Date(System.currentTimeMillis()).toString(), price, users))
         eventsRef.child(eventName).child("expences").child(expenseName).addValueEventListener(expenseInstance.messageListener)
+    }
+
+    override fun deleteExpense(eventName: String, expenseName: String) {
+        if (eventName.isNotEmpty() && expenseName.isNotEmpty()) {
+            eventsRef.child(eventName).child("expences").child(expenseName).removeEventListener(expenseInstance.messageListener)
+            eventsRef.child(eventName).child("expences").child(expenseName).removeValue()
+        }
     }
 
     override fun joinExpense(eventName: String, expenseName: String) {

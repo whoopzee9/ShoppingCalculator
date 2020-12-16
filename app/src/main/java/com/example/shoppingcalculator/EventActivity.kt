@@ -76,7 +76,7 @@ import kotlin.collections.ArrayList
             }
 
             override fun onCheckBoxClick(position: Int, isChecked: Boolean) {
-                firebaseDB.changeExpenseIsBought(currEvent, values[position].name, isChecked)
+                firebaseDB.changeExpenseIsBought(currEvent, adapter.values[position].name, isChecked)
             }
         })
         rvExpenses.adapter = adapter
@@ -95,7 +95,13 @@ import kotlin.collections.ArrayList
 
     }
 
-    fun onTotalDebtClick(view: View) {
+     override fun onResume() {
+         super.onResume()
+
+         viewModel.updateExpenses(currEvent)
+     }
+
+     fun onTotalDebtClick(view: View) {
         val intent = Intent(applicationContext, DebtActivity::class.java)
         intent.putExtra("currEvent", currEvent)
 
@@ -113,7 +119,7 @@ import kotlin.collections.ArrayList
             .show()
 
         dialog.getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener {
-            var name = placeFormView.findViewById<EditText>(R.id.et_expense_name).text
+            var name = placeFormView.findViewById<EditText>(R.id.et_expense_name).text.trim()
             var cost = placeFormView.findViewById<EditText>(R.id.et_expense_cost).text
             if ((name.isBlank()) || (cost.isBlank())) {
                 if (name.isBlank()) {
@@ -153,5 +159,23 @@ import kotlin.collections.ArrayList
              .setMessage("Код: $currCode")
              .setNeutralButton("Ок", null)
              .show()
+     }
+
+     fun onDeleteEventClick(view: View) {
+         val dialog = AlertDialog.Builder(this)
+             .setTitle("Удаление")
+             .setMessage("Вы действительно хотите удалить данное событие?")
+             .setNegativeButton("Отмена", null)
+             .setPositiveButton("Удалить", null)
+             .show()
+
+         dialog.getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener {
+             firebaseDB.deleteEvent(currEvent)
+
+             finish()
+
+
+             dialog.dismiss()
+         }
      }
  }

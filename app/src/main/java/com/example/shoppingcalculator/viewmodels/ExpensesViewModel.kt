@@ -23,7 +23,7 @@ class ExpensesViewModel: ViewModel() {
     fun updateExpenses(eventName: String) {
         //println("before updating group")
         repository.getExpenses(eventName) {
-            println("updating group")
+            println("updating expenses")
             repository.expenses.postValue(it)
 
         }

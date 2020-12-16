@@ -93,12 +93,14 @@ class MainActivity : AppCompatActivity() {
         progressBar.visibility = View.VISIBLE
 
         viewModel.getEvents().observe(this, androidx.lifecycle.Observer {
+            println("OBSERVING------------------------------------------------------------------" + it.size)
             val newValues = ArrayList<Event>()
             for (item in it) {
                 if (item.users.containsValue(VK.getUserId().toString())) {
                     newValues.add(item)
                 }
             }
+            println(newValues.size)
             adapter.values = newValues
             adapter.notifyDataSetChanged()
             progressBar.visibility = View.GONE
@@ -116,8 +118,14 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        viewModel.updateEvents()
+    }
+
     fun onAddEventClick(view: View) {
-        val placeFormView = LayoutInflater.from(this).inflate(R.layout.event_dialog_layout, null)
+        val placeFormView = LayoutInflater.from(this).inflate(R.layout.event_adding_layout, null)
         placeFormView.findViewById<EditText>(R.id.et_EventKey).hint = "Название"
         val dialog = AlertDialog.Builder(this)
             .setTitle("Добавить новое событие")
@@ -127,7 +135,7 @@ class MainActivity : AppCompatActivity() {
             .show()
 
         dialog.getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener {
-            val name = placeFormView.findViewById<EditText>(R.id.et_EventKey).text
+            val name = placeFormView.findViewById<EditText>(R.id.et_EventKey).text.trim()
             if (name.isBlank()) {
                 placeFormView.findViewById<EditText>(R.id.et_EventKey).hint = "Введите название"
             } else {
@@ -140,6 +148,7 @@ class MainActivity : AppCompatActivity() {
                 }
                 firebaseDB.createEvent(name.toString(), key)
                 dialog.dismiss()
+                viewModel.updateEvents()
             }
         }
     }

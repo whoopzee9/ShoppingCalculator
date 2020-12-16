@@ -9,10 +9,12 @@ import java.util.function.BooleanSupplier
 interface ExtensionsCRUD {
 
     fun createEvent(eventName: String, secretCode: String)
+    fun deleteEvent(eventName: String)
     fun joinEvent(code: String)
     fun getEvents(callBack: (MutableList<Event>) -> Unit)
 
     fun createExpense(eventName: String, expenseName: String, price: Double)
+    fun deleteExpense(eventName: String, expenseName: String)
     fun joinExpense(eventName: String, expenseName: String)
     fun exitExpense(eventName: String, expenseName: String)
     fun getExpenses(eventName:String, callBack: (MutableList<Expense>) -> Unit)

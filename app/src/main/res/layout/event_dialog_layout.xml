@@ -8,7 +8,7 @@
         android:layout_marginBottom="30dp"
         android:orientation="vertical">
 
-        <EditText
+    <EditText
             android:id="@+id/et_EventKey"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -16,5 +16,5 @@
             android:layout_marginRight="15dp"
             android:ems="10"
             android:hint="Ключ"
-            android:inputType="textPersonName" />
+            android:inputType="number" />
     </LinearLayout>

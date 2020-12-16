@@ -23,6 +23,7 @@ class EventViewModel : ViewModel() {
     fun updateEvents() {
         //println("before updating group")
         repository.getEvents {
+            println("updating events")
             repository.event.postValue(it)
         }
     }

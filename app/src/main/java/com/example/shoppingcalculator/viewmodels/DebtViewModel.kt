@@ -24,6 +24,7 @@ class DebtViewModel : ViewModel() {
     fun updatePaymentUsers(eventName: String) {
         //println("before updating group")
         repository.getPaymentUsers(eventName) {
+            println("Updating payment users")
             repository.paymentUsers.postValue(it)
         }
     }

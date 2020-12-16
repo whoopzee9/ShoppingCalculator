@@ -63,6 +63,21 @@
         android:focusable="true" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/btn_delete_event"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginBottom="32dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:onClick="onDeleteEventClick"
+        android:tint="#FFFFFF"
+        app:backgroundTint="#FFEB3B"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/btn_showCode"
+        app:srcCompat="@android:drawable/ic_menu_delete" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/btn_showCode"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
