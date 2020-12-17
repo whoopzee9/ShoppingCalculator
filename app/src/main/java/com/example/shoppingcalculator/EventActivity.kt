@@ -10,18 +10,13 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.text.isDigitsOnly
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.shoppingcalculator.firebaseDB.FirebaseDB
 import com.example.shoppingcalculator.viewmodels.DebtViewModel
-import com.example.shoppingcalculator.viewmodels.EventViewModel
 import com.example.shoppingcalculator.viewmodels.ExpensesViewModel
-import com.vk.api.sdk.VK
-import java.text.SimpleDateFormat
-import java.util.*
+
 import kotlin.collections.ArrayList
 
  class EventActivity: AppCompatActivity() {
@@ -107,15 +102,6 @@ import kotlin.collections.ArrayList
          debtViewModel.updatePaymentUsers(currEvent)
      }
 
-     fun debtCounting(users: List<PaymentUser>): Double {
-         var total = 0.0
-         for (item in users) {
-             if (!item.isPaid) {
-                 total += item.payment
-             }
-         }
-         return total
-     }
 
      fun onTotalDebtClick(view: View) {
         val intent = Intent(applicationContext, DebtActivity::class.java)
