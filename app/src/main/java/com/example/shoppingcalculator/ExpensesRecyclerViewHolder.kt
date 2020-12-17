@@ -7,5 +7,5 @@ import androidx.recyclerview.widget.RecyclerView
 
 class ExpensesRecyclerViewHolder(itemView: View): RecyclerView.ViewHolder(itemView)  {
     var username: TextView = itemView.findViewById(R.id.tv_sharing_user_name)
-    var checkBox: CheckBox = itemView.findViewById(R.id.cb_sharing_checkBox)
+    //var checkBox: CheckBox = itemView.findViewById(R.id.cb_sharing_checkBox)
 }

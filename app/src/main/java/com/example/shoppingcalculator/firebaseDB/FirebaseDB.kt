@@ -242,6 +242,7 @@ class FirebaseDB : ExtensionsCRUD {
     }
 
     override fun setPaymentUsers(eventName: String, users: ArrayList<PaymentUser>) {
+        usersRef.child(VK.getUserId().toString()).child("events").child(eventName).child("users").removeValue()
         for (item in users) {
             usersRef.child(VK.getUserId().toString()).child("events").child(eventName).child("users").child(item.id.toString()).setValue(item)
             usersRef.child(VK.getUserId().toString()).child("events").child(eventName).child("users").child(item.id.toString()).addValueEventListener(paymentUserInstance.messageListener)

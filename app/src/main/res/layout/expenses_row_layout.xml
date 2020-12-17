@@ -33,18 +33,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <CheckBox
-                android:id="@+id/cb_sharing_checkBox"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:scaleX="2"
-                android:scaleY="2"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                android:layout_marginEnd="30dp"
-                tools:layout_editor_absoluteX="282dp"
-                tools:layout_editor_absoluteY="24dp" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 
