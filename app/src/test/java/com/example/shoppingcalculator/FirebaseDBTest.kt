@@ -1,13 +1,9 @@
 package com.example.shoppingcalculator
 
-import com.example.shoppingcalculator.firebaseDB.ExtensionsCRUD
-import com.example.shoppingcalculator.firebaseDB.FirebaseDB
 import org.junit.Test
-import org.mockito.InjectMocks
-import org.mockito.Mock
 
 
-class FirebaseDBtest {
+class FirebaseDBTest {
 
     //@Mock
     //lateinit var mdb: ExtensionsCRUD

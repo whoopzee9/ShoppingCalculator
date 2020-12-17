@@ -1,11 +1,7 @@
 package com.example.shoppingcalculator
 
-import android.view.View
 import org.junit.Assert.assertEquals
 import org.junit.Test
-import org.mockito.InjectMocks
-import org.mockito.Mock
-import org.mockito.Mockito
 
 
 class AppUnitTests {
