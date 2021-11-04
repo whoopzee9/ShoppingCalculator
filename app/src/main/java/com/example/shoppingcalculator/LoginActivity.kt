@@ -23,7 +23,8 @@ class LoginActivity: AppCompatActivity() {
         setContentView(R.layout.activity_login)
 
         var fing = VKUtils.getCertificateFingerprint(this, this.packageName)
-        if (fing != null) {
+        if (fing != null          )
+        {
             for (item in fing) {
                 println(item)
             }
